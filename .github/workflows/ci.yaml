@@ -50,6 +50,7 @@ jobs:
           pdm install                        # Instala as dependências do projeto
           pdm run pip check                  # Checa integridade dos pacotes
         shell: bash
-      - name: Rodar "ruff"
+
+      - name: Rodar ruff
         run: python -m pdm run ruff check src/
       # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
