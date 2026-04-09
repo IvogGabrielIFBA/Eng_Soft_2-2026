@@ -22,10 +22,8 @@ from python_pdm_template.utils import somar
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
-    print("Hello, Python PDM Template!")
-    print()
-    print("A soma de 5+2 = ", somar(5, 2))
-    print()
+    print("thiago é gay")
+    
 
 
 # Verifica se o arquivo está sendo executado diretamente
