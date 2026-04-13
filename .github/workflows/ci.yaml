@@ -7,7 +7,7 @@ on:
   push:
     branches: [feature]
   pull_request:
-    branches: [feature, main]
+    branches: [feature, Development]
   workflow_dispatch:
 
 
