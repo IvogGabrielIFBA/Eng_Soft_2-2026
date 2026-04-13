@@ -22,8 +22,8 @@ from python_pdm_template.utils import somar
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
-    print("thiago é gay")
-    
+    print()
+    print("a soma de 2 + 3 é:", somar(2, 3))
 
 
 # Verifica se o arquivo está sendo executado diretamente
