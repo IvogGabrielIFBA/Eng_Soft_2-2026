@@ -59,4 +59,7 @@ jobs:
 
       - name: Rodar ruff
         run: python -m pdm run ruff check src/
+
+      - name: Rodar pytest
+        run: python -m pdm run pytest tests/
       # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
