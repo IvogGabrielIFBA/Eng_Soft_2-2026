@@ -18,8 +18,8 @@ from python_pdm_template.utils import obter_mensagem, somar
 
 def test_somar():
     """Teste simples para a função somar."""
-    resultado = somar(2, 3)
-    assert resultado == 5  # noqa: PLR2004
+    resultado = somar(6, 4)
+    assert resultado == 10  # noqa: PLR2004
 
 # Teste com monkeypatching
 
