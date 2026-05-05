@@ -56,7 +56,7 @@
     // id do seu usuario (clique no seu projeto, no menu a esquerda clique em Information, copie o OrganizationKey e cole ele aqui)
     "connectionId": "IvoGabrielIFBA", 
     // id do seu repositorio (clique no seu projeto, no menu a esquerda clique em Information, copie o ProjectKey e cole ele aqui)
-    "projectKey": "Eng_Soft_2-2026", 
+    "projectKey": "ivoggabrielifba", 
 },
 
 }
