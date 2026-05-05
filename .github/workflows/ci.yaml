@@ -3,7 +3,13 @@ name: Integracao Continua
 
 # Dispara o workflow em push ou execução manual.
 #     Veja https://docs.github.com/pt/actions/using-workflows/events-that-trigger-workflows para mais opções de eventos
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches: [feature]
+  pull_request:
+    branches: [feature, Development]
+  workflow_dispatch:
+
 
 jobs:
   test:
@@ -53,4 +59,7 @@ jobs:
 
       - name: Rodar ruff
         run: python -m pdm run ruff check src/
+
+      - name: Rodar pytest
+        run: python -m pdm run pytest tests/
       # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
