@@ -63,7 +63,8 @@ def teste_carregamento():
     pass
 
 
-
+def teste_de_arquivo_de_com_mesmo_nome():
+    pass
 
 
 # Comentários adicionais:

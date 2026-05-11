@@ -23,6 +23,8 @@ def carregamento():
 
 
 
+def arquivo_de_com_mesmo_nome():
+    pass
 
 def obter_mensagem():
     """
