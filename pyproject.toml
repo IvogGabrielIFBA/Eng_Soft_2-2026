@@ -1,6 +1,6 @@
 [project]
-name = "python_pdm_template"
-version = "0.1.0"
+name = "Midas"
+version = "1.0"
 description = "Template for Python PDM-based projects"
 authors = [{ name = "None", email = "none@domain.com" }]
 dependencies = ["typer>=0.24.1", "setuptools>=82.0.1"]
