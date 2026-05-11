@@ -25,17 +25,25 @@ Esta parte do arquivo descreve configuracoes gerais do projeto (nome, versao, de
 
 ```toml
 [project]
-name = "python_pdm_template" # este é o nome do seu programa/projeto python
-version = "0.1.0" # versao atual do programa
+name = "Midas" # este é o nome do seu programa/projeto python
+version = "1.0" # versao atual do programa
 description = "Template base para qualquer projeto Python baseado em PDM" # descricao do programa
 authors = [ # lista contendo o nome dos autores do programa
   { 
-    name = "Autor 1", 
-    email = "fulano@gmail.com" 
+    name = "Thiago Santos Guimarães", 
+    email = "thiagosantos@gmail.com" 
   },
   { 
-    name = "Autor 2", 
-    email = "cicrano@hotmail.com" 
+    name = "Ivo gabriel de Jesus Rosa", 
+    email = "ivogabriel@gmail.com" 
+  },
+  {
+    name = "Kayky santos goes"
+    email = "kaykysantos@gmail.com"
+  },
+  {
+    name = "fabio dos santos reis"
+    email = "fabioReis@gmail.com"
   },
 ] 
 dependencies = [ # lista de dependencias (bibliotecas externas) que o programa precisa para funcionar
