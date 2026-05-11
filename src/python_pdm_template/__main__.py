@@ -18,14 +18,18 @@ Como construir e usar:
 """
 
 from python_pdm_template.utils import somar
-
+from python_pdm_template.utils import carregamento
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
+
     print()
     primeiro_valor= 6
     segundo_valor = 4
     print("a soma de 2 + 3 é:", somar(primeiro_valor, segundo_valor))
+
+def test():
+    carregamento()
 
 
 # Verifica se o arquivo está sendo executado diretamente

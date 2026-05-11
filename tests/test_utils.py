@@ -52,6 +52,20 @@ def test_obter_mensagem(monkeypatch):  # pyright: ignore[reportMissingParameterT
     resultado = obter_mensagem()
     assert resultado == "Mensagem modificada"
 
+
+
+
+def teste_carregamento():
+    """
+    Teste que fara carregar a barra de carregamento
+    
+    """
+    pass
+
+
+
+
+
 # Comentários adicionais:
 # - O pytest é um framework de testes poderoso e fácil de usar para Python.
 # - O recurso de monkeypatching permite substituir funções, métodos ou atributos

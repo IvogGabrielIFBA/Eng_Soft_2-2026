@@ -18,6 +18,12 @@ def somar(a: int | float, b: int | float):
     return a + b
 
 
+def carregamento():
+    pass
+
+
+
+
 def obter_mensagem():
     """
     Retorna uma mensagem de exemplo.
