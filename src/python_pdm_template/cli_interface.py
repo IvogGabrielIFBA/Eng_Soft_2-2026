@@ -12,7 +12,7 @@ import typer
 
 app = typer.Typer(help="CLI para conversão de arquivos de imagem e documentos.")
 
-FORMATOS_SUPORTADOS = {"jpg", "jpeg", "png", "pdf", "bmp"}
+FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}
 
 
 def execute_conversion_command(
