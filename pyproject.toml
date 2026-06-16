@@ -6,7 +6,7 @@ authors = [{ name = "None", email = "none@domain.com" }]
 dependencies = ["typer>=0.24.1", "setuptools>=82.0.1"]
 requires-python = ">=3.13,<3.14"
 readme = "README.md"
-license-files = ["LICEN[CS]E*", "README.md"]
+license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
 
 [dependency-groups]
