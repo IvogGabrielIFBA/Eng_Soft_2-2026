@@ -18,10 +18,23 @@ def somar(a: int | float, b: int | float):
     return a + b
 
 
-def obter_mensagem():
-    """
-    Retorna uma mensagem de exemplo.
+def carregamento():
+    pass
 
-    :return: A mensagem fornecida pelo usuário.
+
+
+def arquivo_de_com_mesmo_nome():
+    pass
+
+def obter_mensagem():
+    """Retorna uma mensagem de exemplo (modo não interativo).
+
+    Alteração efetuada por IA: removi a dependência de entrada do usuário
+    (antes fazia ``input(...)``) e passei a retornar um valor fixo para melhorar
+    a execução automática e a testabilidade.
+
+    :return: Uma mensagem fixa.
     """
-    return input("Digite uma mensagem: ")
+
+    return "Mensagem fixa"
+

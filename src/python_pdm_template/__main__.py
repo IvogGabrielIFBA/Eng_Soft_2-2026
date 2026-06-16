@@ -18,15 +18,22 @@ Como construir e usar:
 """
 
 from python_pdm_template.utils import somar
-
+from python_pdm_template.utils import carregamento
+from python_pdm_template.utils import arquivo_de_com_mesmo_nome
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
+
     print()
     primeiro_valor= 6
     segundo_valor = 4
     print("a soma de 2 + 3 é:", somar(primeiro_valor, segundo_valor))
 
+def teste_de_carregamento():
+    carregamento()
+
+def teste_arquivo_com_mesmo_nome():
+    arquivo_de_com_mesmo_nome()
 
 # Verifica se o arquivo está sendo executado diretamente
 if __name__ == "__main__":
