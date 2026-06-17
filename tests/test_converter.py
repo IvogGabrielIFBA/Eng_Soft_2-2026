@@ -1,4 +1,5 @@
 import pytest
+
 from src.converter import converter_arquivo
 
 
@@ -12,6 +13,7 @@ def test_arquivo_inexistente():
         converter_arquivo("arquivo_fake.png", "jpg")
 
 
-def test_conversao_nao_implementada():
-    with pytest.raises(NotImplementedError):
-        converter_arquivo("teste.png", "jpg")
+def test_conversao_real():
+    resultado = converter_arquivo("teste.png", "jpg")
+
+    assert resultado.endswith(".jpg")
