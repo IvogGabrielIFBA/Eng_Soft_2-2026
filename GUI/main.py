@@ -5,6 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
+    QDialog,
     QFileDialog,
     QFrame,
     QHBoxLayout,
@@ -24,6 +25,122 @@ GOLD = "#c58b10"
 BLACK = "#000000"
 WHITE = "#ffffff"
 DARK_BUTTON = "#1f1f1f"
+PANEL_BG = "#080808"
+
+MENU_CONTENT = {
+    "Recursos": {
+        "title": "Recursos",
+        "body": (
+            "Conversao rapida para arquivos do dia a dia.\n\n"
+            "- Conversao local, direto pelo computador\n"
+            "- Arquivos preservados sem sobrescrever o original\n"
+            "- Fluxo simples: selecionar, escolher formato e converter\n"
+            "- Interface escura com foco no arquivo"
+        ),
+    },
+    "Formatos": {
+        "title": "Formatos suportados",
+        "body": (
+            "Imagem\n"
+            "PNG, JPG\n\n"
+            "Documento\n"
+            "PDF\n\n"
+            "Em breve\n"
+            "DOCX, MP4, MP3 e outros formatos populares"
+        ),
+    },
+    "Precos": {
+        "title": "Precos",
+        "body": (
+            "Plano atual: gratuito.\n\n"
+            "- Sem mensalidade\n"
+            "- Sem planos de adesao nesta versao\n"
+            "- Conversoes locais pelo proprio aplicativo\n"
+            "- Ideal para uso academico e demonstracao"
+        ),
+    },
+    "Ajuda": {
+        "title": "Ajuda",
+        "body": (
+            "Como usar\n\n"
+            "1. Clique em Selecionar arquivo\n"
+            "2. Escolha o arquivo desejado\n"
+            "3. Selecione o formato de saida quando a opcao estiver disponivel\n"
+            "4. Clique em Converter agora\n\n"
+            "O arquivo convertido sera salvo sem alterar o original."
+        ),
+    },
+}
+
+
+class InfoDialog(QDialog):
+    def __init__(self, title, body, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(title)
+        self.setModal(True)
+        self.setFixedSize(440, 360)
+        self.setObjectName("infoDialog")
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(32, 28, 32, 28)
+        layout.setSpacing(18)
+
+        title_label = QLabel(title)
+        title_label.setObjectName("dialogTitle")
+        title_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        body_label = QLabel(body)
+        body_label.setObjectName("dialogBody")
+        body_label.setWordWrap(True)
+        body_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        close_button = QPushButton("Fechar")
+        close_button.setObjectName("dialogCloseButton")
+        close_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        close_button.clicked.connect(self.accept)
+
+        layout.addWidget(title_label)
+        layout.addWidget(body_label, 1)
+        layout.addWidget(close_button, alignment=Qt.AlignmentFlag.AlignRight)
+
+        self.setStyleSheet(self.stylesheet())
+
+    def stylesheet(self):
+        return f"""
+        QDialog#infoDialog {{
+            background: {PANEL_BG};
+            border: 1px solid {GOLD};
+        }}
+
+        QLabel#dialogTitle {{
+            color: {WHITE};
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 30px;
+            font-weight: 600;
+        }}
+
+        QLabel#dialogBody {{
+            color: {WHITE};
+            font-family: Arial;
+            font-size: 14px;
+            line-height: 1.35;
+        }}
+
+        QPushButton#dialogCloseButton {{
+            color: #000000;
+            background: {GOLD};
+            border: none;
+            border-radius: 20px;
+            min-width: 92px;
+            min-height: 40px;
+            font-size: 12px;
+            font-weight: 700;
+        }}
+
+        QPushButton#dialogCloseButton:hover {{
+            background: #d69c18;
+        }}
+        """
 
 
 class MidasWindow(QMainWindow):
@@ -32,6 +149,7 @@ class MidasWindow(QMainWindow):
         self.setWindowTitle("Midas - Conversor de Arquivos")
         self.resize(1180, 760)
         self.setMinimumSize(980, 620)
+        self.status_bar = self.statusBar()
 
         root = QWidget()
         root.setObjectName("root")
@@ -76,12 +194,15 @@ class MidasWindow(QMainWindow):
         nav.setObjectName("nav")
         nav_layout = QHBoxLayout(nav)
         nav_layout.setContentsMargins(24, 0, 24, 0)
-        nav_layout.setSpacing(28)
+        nav_layout.setSpacing(20)
 
         for text in ("Recursos", "Formatos", "Precos", "Ajuda"):
-            item = QLabel(text)
+            item = QPushButton(text)
             item.setObjectName("navItem")
-            item.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            item.setCursor(Qt.CursorShape.PointingHandCursor)
+            item.clicked.connect(
+                lambda checked=False, menu_name=text: self.show_menu_info(menu_name)
+            )
             nav_layout.addWidget(item)
 
         header.addWidget(nav)
@@ -147,7 +268,7 @@ class MidasWindow(QMainWindow):
         button = QPushButton("Selecionar arquivo")
         button.setObjectName("fileButton")
         button.setCursor(Qt.CursorShape.PointingHandCursor)
-        button.clicked.connect(self.select_file)
+        button.clicked.connect(self.on_select_file_clicked)
 
         upload_layout.addWidget(icon)
         upload_layout.addWidget(instruction)
@@ -157,6 +278,14 @@ class MidasWindow(QMainWindow):
 
         return hero
 
+    def show_menu_info(self, menu_name):
+        content = MENU_CONTENT[menu_name]
+        dialog = InfoDialog(content["title"], content["body"], self)
+        dialog.exec()
+
+    def on_select_file_clicked(self):
+        self.select_file()
+
     def select_file(self):
         path, _ = QFileDialog.getOpenFileName(
             self,
@@ -165,7 +294,7 @@ class MidasWindow(QMainWindow):
             "Todos os arquivos (*.*)",
         )
         if path:
-            self.statusBar().showMessage(f"Arquivo selecionado: {path}", 6000)
+            self.status_bar.showMessage(f"Arquivo selecionado: {path}", 6000)
 
     def stylesheet(self):
         return f"""
@@ -189,10 +318,19 @@ class MidasWindow(QMainWindow):
             min-height: 56px;
         }}
 
-        QLabel#navItem {{
+        QPushButton#navItem {{
             color: {WHITE};
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            min-height: 32px;
+            padding: 0 4px;
             font-size: 12px;
             font-weight: 700;
+        }}
+
+        QPushButton#navItem:hover {{
+            color: {GOLD};
         }}
 
         QPushButton {{
