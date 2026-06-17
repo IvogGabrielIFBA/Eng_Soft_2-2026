@@ -34,7 +34,7 @@ MENU_CONTENT = {
             "- Conversao local, direto pelo computador\n"
             "- Arquivos preservados sem sobrescrever o original\n"
             "- Fluxo simples: selecionar, escolher formato e converter\n"
-            "- Interface escura com foco no arquivo"
+            
         ),
     },
     "Formatos": {
@@ -45,7 +45,7 @@ MENU_CONTENT = {
             "Documento\n"
             "PDF\n\n"
             "Em breve\n"
-            "DOCX, MP4, MP3 e outros formatos populares"
+            "DOCX, MP4, DOCX outros formatos populares"
         ),
     },
     "Precos": {
@@ -55,7 +55,7 @@ MENU_CONTENT = {
             "- Sem mensalidade\n"
             "- Sem planos de adesao nesta versao\n"
             "- Conversoes locais pelo proprio aplicativo\n"
-            "- Ideal para uso academico e demonstracao"
+            "- Ideal para uso academico"
         ),
     },
     "Ajuda": {
