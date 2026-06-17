@@ -72,4 +72,3 @@ def teste_de_arquivo_de_com_mesmo_nome(monkeypatch):  # pyright: ignore[reportMi
 #   durante o teste, útil para isolar dependências externas.
 # - O uso de asserts no pytest é direto e fornece mensagens úteis em caso de falha.
 # - Para rodar os testes, use o comando `pytest tests/` no terminal.
-
