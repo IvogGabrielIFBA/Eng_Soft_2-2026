@@ -17,8 +17,17 @@ from PyQt6.QtWidgets import (
 )
 
 
-BASE_DIR = Path(__file__).resolve().parent
+def get_base_dir() -> Path:
+    """Base directory for resources (works with PyInstaller onefile)."""
+
+    if getattr(sys, "_MEIPASS", None):
+        return Path(sys._MEIPASS)  # type: ignore[attr-defined]
+    return Path(__file__).resolve().parent
+
+
+BASE_DIR = get_base_dir()
 LOGO_PATH = BASE_DIR / "assets" / "logo-midas.png"
+
 
 GOLD = "#c58b10"
 BLACK = "#000000"
