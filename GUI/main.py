@@ -5,7 +5,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
-    QDialog,
     QFileDialog,
     QFrame,
     QHBoxLayout,
@@ -34,7 +33,8 @@ MENU_CONTENT = {
             "Conversao rapida para arquivos do dia a dia.\n\n"
             "- Conversao local, direto pelo computador\n"
             "- Arquivos preservados sem sobrescrever o original\n"
-            "- Fluxo simples: selecionar, escolher formato e converter"
+            "- Fluxo simples: selecionar, escolher formato e converter\n"
+            "- Interface escura com foco no arquivo"
         ),
     },
     "Formatos": {
@@ -72,76 +72,6 @@ MENU_CONTENT = {
 }
 
 
-class InfoDialog(QDialog):
-    def __init__(self, title, body, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle(title)
-        self.setModal(True)
-        self.setFixedSize(440, 360)
-        self.setObjectName("infoDialog")
-
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(32, 28, 32, 28)
-        layout.setSpacing(18)
-
-        title_label = QLabel(title)
-        title_label.setObjectName("dialogTitle")
-        title_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
-
-        body_label = QLabel(body)
-        body_label.setObjectName("dialogBody")
-        body_label.setWordWrap(True)
-        body_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-
-        close_button = QPushButton("Fechar")
-        close_button.setObjectName("dialogCloseButton")
-        close_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        close_button.clicked.connect(self.accept)
-
-        layout.addWidget(title_label)
-        layout.addWidget(body_label, 1)
-        layout.addWidget(close_button, alignment=Qt.AlignmentFlag.AlignRight)
-
-        self.setStyleSheet(self.stylesheet())
-
-    def stylesheet(self):
-        return f"""
-        QDialog#infoDialog {{
-            background: {PANEL_BG};
-            border: 1px solid {GOLD};
-        }}
-
-        QLabel#dialogTitle {{
-            color: {WHITE};
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 30px;
-            font-weight: 600;
-        }}
-
-        QLabel#dialogBody {{
-            color: {WHITE};
-            font-family: Arial;
-            font-size: 14px;
-            line-height: 1.35;
-        }}
-
-        QPushButton#dialogCloseButton {{
-            color: #000000;
-            background: {GOLD};
-            border: none;
-            border-radius: 20px;
-            min-width: 92px;
-            min-height: 40px;
-            font-size: 12px;
-            font-weight: 700;
-        }}
-
-        QPushButton#dialogCloseButton:hover {{
-            background: #d69c18;
-        }}
-        """
-
-
 class MidasWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -149,6 +79,8 @@ class MidasWindow(QMainWindow):
         self.resize(1180, 760)
         self.setMinimumSize(980, 620)
         self.status_bar = self.statusBar()
+        self.active_menu = None
+        self.nav_buttons = {}
 
         root = QWidget()
         root.setObjectName("root")
@@ -159,7 +91,12 @@ class MidasWindow(QMainWindow):
         page.setSpacing(0)
 
         page.addLayout(self.build_header())
-        page.addSpacing(108)
+        page.addSpacing(32)
+        page.addWidget(
+            self.build_info_panel(),
+            alignment=Qt.AlignmentFlag.AlignHCenter,
+        )
+        page.addSpacing(76)
         page.addLayout(self.build_hero())
         page.addStretch(1)
 
@@ -198,10 +135,12 @@ class MidasWindow(QMainWindow):
         for text in ("Recursos", "Formatos", "Precos", "Ajuda"):
             item = QPushButton(text)
             item.setObjectName("navItem")
+            item.setProperty("active", False)
             item.setCursor(Qt.CursorShape.PointingHandCursor)
             item.clicked.connect(
-                lambda checked=False, menu_name=text: self.show_menu_info(menu_name)
+                lambda checked=False, menu_name=text: self.toggle_menu_info(menu_name)
             )
+            self.nav_buttons[text] = item
             nav_layout.addWidget(item)
 
         header.addWidget(nav)
@@ -219,6 +158,31 @@ class MidasWindow(QMainWindow):
         header.addWidget(convert)
 
         return header
+
+    def build_info_panel(self):
+        self.info_panel = QFrame()
+        self.info_panel.setObjectName("infoPanel")
+        self.info_panel.setFixedWidth(620)
+        self.info_panel.setMinimumHeight(164)
+        self.info_panel.hide()
+
+        panel_layout = QVBoxLayout(self.info_panel)
+        panel_layout.setContentsMargins(32, 24, 32, 24)
+        panel_layout.setSpacing(12)
+
+        self.info_title = QLabel()
+        self.info_title.setObjectName("infoTitle")
+        self.info_title.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        self.info_body = QLabel()
+        self.info_body.setObjectName("infoBody")
+        self.info_body.setWordWrap(True)
+        self.info_body.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        panel_layout.addWidget(self.info_title)
+        panel_layout.addWidget(self.info_body)
+
+        return self.info_panel
 
     def build_hero(self):
         hero = QHBoxLayout()
@@ -277,10 +241,25 @@ class MidasWindow(QMainWindow):
 
         return hero
 
-    def show_menu_info(self, menu_name):
+    def toggle_menu_info(self, menu_name):
+        if self.active_menu == menu_name and self.info_panel.isVisible():
+            self.active_menu = None
+            self.info_panel.hide()
+            self.update_nav_state()
+            return
+
         content = MENU_CONTENT[menu_name]
-        dialog = InfoDialog(content["title"], content["body"], self)
-        dialog.exec()
+        self.active_menu = menu_name
+        self.info_title.setText(content["title"])
+        self.info_body.setText(content["body"])
+        self.info_panel.show()
+        self.update_nav_state()
+
+    def update_nav_state(self):
+        for name, button in self.nav_buttons.items():
+            button.setProperty("active", name == self.active_menu)
+            button.style().unpolish(button)
+            button.style().polish(button)
 
     def on_select_file_clicked(self):
         self.select_file()
@@ -328,8 +307,29 @@ class MidasWindow(QMainWindow):
             font-weight: 700;
         }}
 
-        QPushButton#navItem:hover {{
+        QPushButton#navItem:hover,
+        QPushButton#navItem[active="true"] {{
             color: {GOLD};
+        }}
+
+        QFrame#infoPanel {{
+            background: {PANEL_BG};
+            border: 1px solid {GOLD};
+            border-radius: 18px;
+        }}
+
+        QLabel#infoTitle {{
+            color: {WHITE};
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 30px;
+            font-weight: 600;
+        }}
+
+        QLabel#infoBody {{
+            color: {WHITE};
+            font-family: Arial;
+            font-size: 14px;
+            line-height: 1.35;
         }}
 
         QPushButton {{
