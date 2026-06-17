@@ -3,7 +3,12 @@ name = "Midas"
 version = "1.0"
 description = "Template for Python PDM-based projects"
 authors = [{ name = "None", email = "none@domain.com" }]
-dependencies = ["typer>=0.24.1", "setuptools>=82.0.1"]
+dependencies = [
+    "typer>=0.24.1",
+    "setuptools>=82.0.1",
+    "pillow>=11.0.0",
+    "PyQt6>=6.7.0",
+]
 requires-python = ">=3.13,<3.14"
 readme = "README.md"
 license = { text = "MIT" }
@@ -15,8 +20,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "pyright>=1.1.408",
     "ruff>=0.15.1",
-    "pyinstaller>=4.5.1",
-    "PyQt5>=5.15.10",
+    "pyinstaller>=6.0.0",
 ]
 
 [build-system]
