@@ -34,8 +34,7 @@ MENU_CONTENT = {
             "Conversao rapida para arquivos do dia a dia.\n\n"
             "- Conversao local, direto pelo computador\n"
             "- Arquivos preservados sem sobrescrever o original\n"
-            "- Fluxo simples: selecionar, escolher formato e converter\n"
-            "- Interface escura com foco no arquivo"
+            "- Fluxo simples: selecionar, escolher formato e converter"
         ),
     },
     "Formatos": {
