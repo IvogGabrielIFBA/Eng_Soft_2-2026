@@ -5,9 +5,9 @@ name: Integracao Continua
 #     Veja https://docs.github.com/pt/actions/using-workflows/events-that-trigger-workflows para mais opções de eventos
 on:
   push:
-    branches: [feature]
+    branches: [master, feature]
   pull_request:
-    branches: [feature, Development]
+    branches: [master, feature, Development]
   workflow_dispatch:
 
 
