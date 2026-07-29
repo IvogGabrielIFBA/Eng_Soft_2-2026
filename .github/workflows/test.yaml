@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        # Testa em múltiplos sistemas operacionais
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # O projeto é validado no ambiente-alvo: Windows.
+        os: [windows-latest]
         # O pdm.lock foi gerado para Python 3.13; não usar "3.x",
         # pois ele pode selecionar uma versão ainda não suportada.
         python-version:
