@@ -20,7 +20,7 @@ def test_rf002_sistema_prove_comandos_via_terminal():
     """
 
     # Executa o comando definido na sua interface CLI
-    result = runner.invoke(app, ["convert-command", "--input", "arquivo.png", "--target", "pdf"])
+    result = runner.invoke(app, ["--input", "teste.png", "--format", "pdf"])
 
     # Valida se a interface aceitou a estrutura das flags (Estado RED esperado)
     assert result.exit_code == 0
@@ -30,7 +30,7 @@ def test_rf002_sistema_obriga_parametros_entrada():
     """Valida se a tipagem e obrigatoriedade do RF002 estão funcionando."""
 
     # Tenta rodar sem a flag obrigatória --input
-    result = runner.invoke(app, ["convert-command", "--target", "pdf"])
+    result = runner.invoke(app, ["--format", "pdf"])
 
     # Deve retornar um erro de uso (exit_code diferente de 0), o que é o comportamento correto.
     assert result.exit_code != 0
