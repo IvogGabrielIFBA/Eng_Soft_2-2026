@@ -64,3 +64,30 @@ jobs:
       - name: Rodar pytest
         run: python -m pdm run pytest tests/
       # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
+
+  sonarcloud:
+    name: SonarCloud analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies and generate coverage report
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pdm
+          pdm install
+          pdm run pytest
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
