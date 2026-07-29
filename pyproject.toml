@@ -4,7 +4,7 @@ version = "1.0"
 description = "Template for Python PDM-based projects"
 authors = [{ name = "None", email = "none@domain.com" }]
 dependencies = ["typer>=0.24.1", "setuptools>=82.0.1"]
-requires-python = "3.13"
+requires-python = "3.14.6"
 readme = "README.md"
 license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
