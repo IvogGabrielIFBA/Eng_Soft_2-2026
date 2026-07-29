@@ -23,16 +23,17 @@ from python_pdm_template.utils import arquivo_de_com_mesmo_nome
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
-
     print()
     primeiro_valor= 6
     segundo_valor = 4
     print("a soma de 2 + 3 é:", somar(primeiro_valor, segundo_valor))
 
 def teste_de_carregamento():
+    """Executa a rotina de carregamento usada pelos testes."""
     carregamento()
 
 def teste_arquivo_com_mesmo_nome():
+    """Executa a rotina de verificação de arquivos homônimos."""
     arquivo_de_com_mesmo_nome()
 
 # Verifica se o arquivo está sendo executado diretamente

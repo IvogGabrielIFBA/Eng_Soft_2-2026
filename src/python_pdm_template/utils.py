@@ -19,11 +19,13 @@ def somar(a: int | float, b: int | float):
 
 
 def carregamento():
+    """Representa uma rotina de carregamento sem efeitos colaterais."""
     pass
 
 
 
 def arquivo_de_com_mesmo_nome():
+    """Representa a verificação de arquivos com o mesmo nome."""
     pass
 
 def obter_mensagem():
@@ -35,6 +37,5 @@ def obter_mensagem():
 
     :return: Uma mensagem fixa.
     """
-
     return "Mensagem fixa"
 
