@@ -23,19 +23,20 @@ def carregamento():
     pass
 
 
-
 def arquivo_de_com_mesmo_nome():
     """Representa a verificação de arquivos com o mesmo nome."""
     pass
 
+
 def obter_mensagem():
     """Retorna uma mensagem de exemplo (modo não interativo).
 
-    Alteração efetuada por IA: removi a dependência de entrada do usuário
-    (antes fazia ``input(...)``) e passei a retornar um valor fixo para melhorar
-    a execução automática e a testabilidade.
+    Observação: alteração realizada por IA.
+    Modificação: removida a dependência de entrada do usuário (`input(...)`) e
+    adotado retorno de mensagem fixa para melhorar a execução automática e a
+    testabilidade.
 
     :return: Uma mensagem fixa.
     """
+    # IA: modificado para não usar input() e garantir execução automática/testes
     return "Mensagem fixa"
-
