@@ -21,7 +21,17 @@ def execute_conversion_command(
     formato_destino: str,
     sobrescrever: bool = False
 ) -> bool:
-    """Executa o processamento da conversão utilizando os parâmetros validados."""
+    """Executa o processamento da conversão utilizando os parâmetros validados.
+
+    Parameters:
+        caminho_origem: Caminho do arquivo de entrada.
+        diretorio_destino: Diretório de saída.
+        formato_destino: Formato de destino.
+        sobrescrever: Indica se deve sobrescrever arquivo existente.
+
+    Returns:
+        True quando o processamento for bem-sucedido.
+    """
     # Referência temporária das variáveis para satisfazer o analisador estático
     _ = (caminho_origem, diretorio_destino, formato_destino, sobrescrever)
     return True
@@ -46,7 +56,11 @@ def convert_command(
         help="Força a sobrescrita caso o arquivo de destino já exista."
     )
 ):
-    """Executa a validação dos parâmetros e inicia o processo de conversão (RF002)."""
+    """Executa a validação dos parâmetros e inicia o processo de conversão (RF002).
+
+    Raises:
+        typer.Exit: Em caso de falha de validação de parâmetros.
+    """
     # Validação de existência do arquivo de entrada
     if not os.path.exists(origem):
         typer.secho(f"✗ Erro: O arquivo de origem não foi encontrado no caminho: '{origem}'", fg=typer.colors.RED, bold=True)

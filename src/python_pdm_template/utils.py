@@ -11,21 +11,32 @@ def somar(a: int | float, b: int | float):
     """
     Retorna a soma de dois números.
 
-    :param a: Primeiro número.
-    :param b: Segundo número.
-    :return: A soma de a e b.
+    Parameters:
+        a: Primeiro número.
+        b: Segundo número.
+
+    Returns:
+        A soma de a e b.
     """
     return a + b
 
 
 def carregamento():
-    """Representa uma rotina de carregamento sem efeitos colaterais."""
-    pass
+    """Representa uma rotina de carregamento sem efeitos colaterais.
+
+    Returns:
+        None
+    """
+    # Função de placeholder para representar um processo de carregamento.
 
 
 def arquivo_de_com_mesmo_nome():
-    """Representa a verificação de arquivos com o mesmo nome."""
-    pass
+    """Representa a verificação de arquivos com o mesmo nome.
+
+    Returns:
+        None
+    """
+    # Função de placeholder para demonstrar verificação de conflito de nomes.
 
 
 def obter_mensagem():
@@ -36,7 +47,8 @@ def obter_mensagem():
     adotado retorno de mensagem fixa para melhorar a execução automática e a
     testabilidade.
 
-    :return: Uma mensagem fixa.
+    Returns:
+        Uma mensagem fixa.
     """
     # IA: modificado para não usar input() e garantir execução automática/testes
     return "Mensagem fixa"

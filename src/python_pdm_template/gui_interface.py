@@ -30,7 +30,21 @@ def execute_gui_command(
     progress: int = 0,
     sobrescrever: bool = False,
 ) -> bool:
-    """Executa validações de fluxo para simular GUI (sem PySide6)."""
+    """Executa validações de fluxo para simular GUI (sem PySide6).
+
+    Parameters:
+        caminho_origem: Caminho do arquivo de entrada.
+        formato_destino: Formato de destino.
+        page: Página simulada.
+        progress: Valor de progresso.
+        sobrescrever: Indica se deve sobrescrever arquivo existente.
+
+    Returns:
+        True quando as validações passam.
+
+    Raises:
+        typer.BadParameter: Se `page` ou `progress` for inválido.
+    """
     # RF003: navegação estilo SPA
     if page not in _VALID_PAGES:
         raise typer.BadParameter("page inválida. Use uma página suportada.")
