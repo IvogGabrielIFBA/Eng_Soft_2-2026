@@ -19,12 +19,7 @@ from python_pdm_template.utils import arquivo_de_com_mesmo_nome, carregamento, s
 
 
 def main():
-    """Função principal que exibe uma mensagem de boas-vindas.
-
-    Returns
-    -------
-    None
-    """
+    """Função principal que exibe uma mensagem de boas-vindas."""
     print()
     primeiro_valor = 6
     segundo_valor = 4
@@ -32,22 +27,12 @@ def main():
 
 
 def teste_de_carregamento():
-    """Executa a rotina de carregamento usada pelos testes.
-
-    Returns
-    -------
-    None
-    """
+    """Executa a rotina de carregamento usada pelos testes."""
     carregamento()
 
 
 def teste_arquivo_com_mesmo_nome():
-    """Executa a rotina de verificação de arquivos homônimos.
-
-    Returns
-    -------
-    None
-    """
+    """Executa a rotina de verificação de arquivos homônimos."""
     arquivo_de_com_mesmo_nome()
 
 

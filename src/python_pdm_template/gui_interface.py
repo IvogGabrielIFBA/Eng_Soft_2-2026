@@ -76,12 +76,7 @@ def convert_command(
     progress: int = typer.Option(0, "--progress", help="Progresso (0-100) para simulação."),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar sobrescrita."),
 ):
-    """Comando testável que simula a lógica de GUI.
-
-    Returns
-    -------
-    None
-    """
+    """Comando testável que simula a lógica de GUI."""
     execute_gui_command(
         caminho_origem=origem,
         formato_destino=destino,
