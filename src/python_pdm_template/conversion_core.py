@@ -1,9 +1,8 @@
-"""
-Módulo Core do Conversor Midas.
+"""Módulo core do conversor Midas.
 
-Este módulo contém a lógica central de processamento de arquivos, 
-incluindo as regras de conversão entre formatos e a gestão de 
-conflitos de nomes no sistema de arquivos (RF001 e RF006).
+Contém a lógica central de processamento de arquivos, incluindo regras de
+conversão entre formatos e gestão de conflitos de nomes no sistema de
+arquivos (RF001 e RF006).
 """
 
 from src.converter import converter_arquivo

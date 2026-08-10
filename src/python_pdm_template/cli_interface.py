@@ -1,9 +1,7 @@
-"""
-Interface de Linha de Comando (CLI).
+"""Interface de Linha de Comando (CLI).
 
-Este módulo define a estrutura de comandos, flags e parâmetros 
-utilizando a biblioteca Typer. É responsável por traduzir as 
-entradas do terminal em ações para o Core do sistema (RF002).
+Este módulo define comandos e opções usando Typer para expor a
+funcionalidade de conversão via terminal.
 """
 
 import os
@@ -23,13 +21,20 @@ def execute_conversion_command(
 ) -> bool:
     """Executa o processamento da conversão utilizando os parâmetros validados.
 
-    Parameters:
-        caminho_origem: Caminho do arquivo de entrada.
-        diretorio_destino: Diretório de saída.
-        formato_destino: Formato de destino.
-        sobrescrever: Indica se deve sobrescrever arquivo existente.
+    Parameters
+    ----------
+    caminho_origem : str
+        Caminho do arquivo de entrada.
+    diretorio_destino : str
+        Diretório de saída.
+    formato_destino : str
+        Formato de destino.
+    sobrescrever : bool, optional
+        Indica se deve sobrescrever arquivo existente (default: False).
 
-    Returns:
+    Returns
+    -------
+    bool
         True quando o processamento for bem-sucedido.
     """
     # Referência temporária das variáveis para satisfazer o analisador estático
@@ -56,10 +61,12 @@ def convert_command(
         help="Força a sobrescrita caso o arquivo de destino já exista."
     )
 ):
-    """Executa a validação dos parâmetros e inicia o processo de conversão (RF002).
+    """Valida parâmetros e inicia o processo de conversão.
 
-    Raises:
-        typer.Exit: Em caso de falha de validação de parâmetros.
+    Raises
+    ------
+    typer.Exit
+        Em caso de falha de validação de parâmetros.
     """
     # Validação de existência do arquivo de entrada
     if not os.path.exists(origem):

@@ -32,18 +32,28 @@ def execute_gui_command(
 ) -> bool:
     """Executa validações de fluxo para simular GUI (sem PySide6).
 
-    Parameters:
-        caminho_origem: Caminho do arquivo de entrada.
-        formato_destino: Formato de destino.
-        page: Página simulada.
-        progress: Valor de progresso.
-        sobrescrever: Indica se deve sobrescrever arquivo existente.
+    Parameters
+    ----------
+    caminho_origem : str
+        Caminho do arquivo de entrada.
+    formato_destino : str
+        Formato de destino.
+    page : str, optional
+        Página simulada (default: "tela1").
+    progress : int, optional
+        Valor de progresso (default: 0).
+    sobrescrever : bool, optional
+        Indica se deve sobrescrever arquivo existente (default: False).
 
-    Returns:
+    Returns
+    -------
+    bool
         True quando as validações passam.
 
-    Raises:
-        typer.BadParameter: Se `page` ou `progress` for inválido.
+    Raises
+    ------
+    typer.BadParameter
+        Se `page` ou `progress` for inválido.
     """
     # RF003: navegação estilo SPA
     if page not in _VALID_PAGES:
@@ -66,7 +76,12 @@ def convert_command(
     progress: int = typer.Option(0, "--progress", help="Progresso (0-100) para simulação."),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar sobrescrita."),
 ):
-    """Command testável que simula a lógica de GUI."""
+    """Comando testável que simula a lógica de GUI.
+
+    Returns
+    -------
+    None
+    """
     execute_gui_command(
         caminho_origem=origem,
         formato_destino=destino,
@@ -81,4 +96,3 @@ def convert_command(
 
 if __name__ == "__main__":
     app()
-

@@ -1,11 +1,10 @@
-"""
-Este arquivo `__init__.py` é usado para inicializar o pacote `python_pdm_template`.
+"""Inicialização do pacote ``python_pdm_template``.
 
-Ele pode conter:
-- Código de inicialização do pacote.
-- Importações de módulos ou subpacotes.
-- Definições de variáveis globais que devem estar disponíveis ao importar o pacote.
+Este módulo torna o diretório um pacote Python e pode expor importações
+de conveniência ou variáveis de pacote.
 
-A presença deste arquivo indica ao Python que o diretório deve ser tratado como 
-um pacote.
+Notes
+-----
+Arquivos de inicialização de pacote são opcionais em versões modernas do
+Python, mas são úteis para controlar a API pública do pacote.
 """

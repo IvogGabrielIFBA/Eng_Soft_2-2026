@@ -1,54 +1,62 @@
-"""
-Este módulo contém funções utilitárias para o projeto.
+"""Módulo utilitários do projeto.
 
-Funções:
-- somar: Retorna a soma de dois números.
-- obter_mensagem: Retorna uma mensagem fornecida pelo usuário.
+Contém funções auxiliares simples usadas pelo pacote e testes.
 """
 
 
 def somar(a: int | float, b: int | float):
-    """
-    Retorna a soma de dois números.
+    """Retorna a soma de dois números.
 
-    Parameters:
-        a: Primeiro número.
-        b: Segundo número.
+    Parameters
+    ----------
+    a : int | float
+        Primeiro número.
+    b : int | float
+        Segundo número.
 
-    Returns:
-        A soma de a e b.
+    Returns
+    -------
+    int | float
+        A soma de ``a`` e ``b``.
     """
     return a + b
 
 
 def carregamento():
-    """Representa uma rotina de carregamento sem efeitos colaterais.
+    """Rotina de carregamento placeholder.
 
-    Returns:
-        None
+    Esta função representa uma operação de carregamento sem efeitos
+    colaterais, usada apenas para testes.
+
+    Returns
+    -------
+    None
     """
     # Função de placeholder para representar um processo de carregamento.
 
 
 def arquivo_de_com_mesmo_nome():
-    """Representa a verificação de arquivos com o mesmo nome.
+    """Verifica conflitos de nomes de arquivos.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     # Função de placeholder para demonstrar verificação de conflito de nomes.
 
 
 def obter_mensagem():
-    """Retorna uma mensagem de exemplo (modo não interativo).
+    """Retorna uma mensagem fixa para modo não interativo.
 
-    Observação: alteração realizada por IA.
-    Modificação: removida a dependência de entrada do usuário (`input(...)`) e
-    adotado retorno de mensagem fixa para melhorar a execução automática e a
-    testabilidade.
+    Observação
+    ---------
+    A implementação foi alterada para evitar chamadas interativas a
+    ``input()`` e facilitar testes automatizados.
 
-    Returns:
-        Uma mensagem fixa.
+    Returns
+    -------
+    str
+        Mensagem fixa.
     """
     # IA: modificado para não usar input() e garantir execução automática/testes
     return "Mensagem fixa"
