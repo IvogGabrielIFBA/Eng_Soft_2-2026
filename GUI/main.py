@@ -1,5 +1,8 @@
-import sys
+﻿import sys
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT_DIR))
 
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QPixmap
@@ -16,6 +19,10 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT_DIR))
 
 
 def get_base_dir() -> Path:
@@ -363,18 +370,50 @@ class MidasWindow(QMainWindow):
             self.finish_conversion()
 
     def finish_conversion(self):
-        self.convert_button.setEnabled(True)
-        for button in self.format_buttons:
-            button.setEnabled(True)
-
         file_format = self.current_format or "formato escolhido"
-        self.progress_bar.setValue(100)
-        self.info_title.setText("Conversao finalizada")
-        self.info_body.setText(
-            f"Arquivo convertido para {file_format.upper()} com sucesso."
-        )
-        self.info_panel.show()
-        self.status_bar.showMessage("Conversao finalizada.", 6000)
+
+        try:
+            resultado = converter_arquivo(
+                str(self.selected_file),
+                file_format,
+            )
+
+            self.convert_button.setEnabled(True)
+
+            for button in self.format_buttons:
+                button.setEnabled(True)
+
+            self.progress_bar.setValue(100)
+
+            self.info_title.setText("ConversÃ£o finalizada")
+            self.info_body.setText(
+                f"Arquivo convertido para {file_format.upper()} com sucesso.\n\n"
+                f"Salvo em: {resultado}"
+            )
+
+            self.info_panel.show()
+            self.status_bar.showMessage(
+                f"ConversÃ£o concluÃ­da: {resultado}",
+                6000,
+            )
+
+        except Exception as erro:
+            self.convert_button.setEnabled(True)
+
+            for button in self.format_buttons:
+                button.setEnabled(True)
+
+            self.info_title.setText("Erro na conversÃ£o")
+            self.info_body.setText(
+                f"NÃ£o foi possÃ­vel converter o arquivo.\n\n"
+                f"Erro: {erro}"
+            )
+
+            self.info_panel.show()
+            self.status_bar.showMessage(
+                "Erro durante a conversÃ£o.",
+                6000,
+            )
 
     def update_nav_state(self):
         for name, button in self.nav_buttons.items():
@@ -571,3 +610,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
