@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QProgressBar,
     QPushButton,
     QSizePolicy,
     QVBoxLayout,
@@ -47,7 +48,7 @@ MENU_CONTENT = {
     },
     "Formatos": {
         "title": "Formatos suportados",
-        "body": "JPG\nPNG\nPDF\nBMP",
+        "body": "JPG\nPNG\nPDF\nBMP\n\nEm breve: DOCX, XLSX",
     },
     "Precos": {
         "title": "Precos",
@@ -66,7 +67,7 @@ MENU_CONTENT = {
             "1. Clique em Selecionar arquivo\n"
             "2. Escolha o arquivo desejado\n"
             "3. Clique em Converter agora\n"
-            "4. Selecione jpg, png, pdf ou bmp\n\n"
+            "4. Selecione JPG, PNG, PDF ou BMP\n\n"
             "O arquivo convertido sera salvo sem alterar o original."
         ),
     },
@@ -83,6 +84,9 @@ class MidasWindow(QMainWindow):
         self.active_menu = None
         self.selected_file = None
         self.current_format = None
+        self.progress_value = 0
+        self.progress_timer = QTimer(self)
+        self.progress_timer.timeout.connect(self.update_conversion_progress)
         self.nav_buttons = {}
         self.format_buttons = []
 
@@ -198,9 +202,19 @@ class MidasWindow(QMainWindow):
             self.format_buttons.append(button)
             format_layout.addWidget(button)
 
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setObjectName("conversionProgress")
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setFormat("%p%")
+        self.progress_bar.setFixedHeight(28)
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.hide()
+
         panel_layout.addWidget(self.info_title)
         panel_layout.addWidget(self.info_body)
         panel_layout.addWidget(self.format_row)
+        panel_layout.addWidget(self.progress_bar)
         self.format_row.hide()
 
         return self.info_panel
@@ -273,6 +287,8 @@ class MidasWindow(QMainWindow):
             self.active_menu = None
             self.info_panel.hide()
             self.format_row.hide()
+            self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.update_nav_state()
             return
 
@@ -281,6 +297,8 @@ class MidasWindow(QMainWindow):
         self.info_title.setText(content["title"])
         self.info_body.setText(content["body"])
         self.format_row.hide()
+        self.progress_bar.hide()
+        self.info_panel.setMinimumHeight(164)
         self.info_panel.show()
         self.update_nav_state()
 
@@ -289,12 +307,16 @@ class MidasWindow(QMainWindow):
             self.active_menu = None
             self.info_panel.hide()
             self.format_row.hide()
+            self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.update_nav_state()
             return
 
         self.active_menu = "Converter"
         self.info_title.setText("Escolha o formato")
         self.info_body.setText("Selecione o formato de saida para iniciar a conversao.")
+        self.progress_bar.hide()
+        self.info_panel.setMinimumHeight(164)
         self.format_row.show()
         self.info_panel.show()
         self.update_nav_state()
@@ -305,24 +327,40 @@ class MidasWindow(QMainWindow):
             self.info_body.setText(
                 "Antes de converter, escolha um arquivo no botao Selecionar arquivo."
             )
+            self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.format_row.show()
             self.info_panel.show()
             self.status_bar.showMessage("Selecione um arquivo antes de converter.", 5000)
             return
 
         self.current_format = file_format
+        self.progress_value = 0
+        self.progress_bar.setValue(self.progress_value)
+        self.progress_bar.show()
         self.convert_button.setEnabled(False)
         for button in self.format_buttons:
             button.setEnabled(False)
 
         self.info_title.setText("Convertendo arquivo")
         self.info_body.setText(
-            f"Preparando conversao para {file_format.upper()}...\n\nAguarde alguns segundos."
+            f"Preparando conversao para {file_format.upper()}...\n\nAcompanhe o progresso abaixo."
         )
+        self.info_panel.setMinimumHeight(210)
         self.format_row.hide()
         self.info_panel.show()
+        self.progress_bar.show()
+        QApplication.processEvents()
         self.status_bar.showMessage("Conversao em andamento...", 3000)
-        QTimer.singleShot(1800, self.finish_conversion)
+        self.progress_timer.start(80)
+
+    def update_conversion_progress(self):
+        self.progress_value += 2
+        self.progress_bar.setValue(self.progress_value)
+
+        if self.progress_value >= 100:
+            self.progress_timer.stop()
+            self.finish_conversion()
 
     def finish_conversion(self):
         self.convert_button.setEnabled(True)
@@ -330,6 +368,7 @@ class MidasWindow(QMainWindow):
             button.setEnabled(True)
 
         file_format = self.current_format or "formato escolhido"
+        self.progress_bar.setValue(100)
         self.info_title.setText("Conversao finalizada")
         self.info_body.setText(
             f"Arquivo convertido para {file_format.upper()} com sucesso."
@@ -414,6 +453,22 @@ class MidasWindow(QMainWindow):
             font-family: Arial;
             font-size: 14px;
             line-height: 1.35;
+        }}
+
+        QProgressBar#conversionProgress {{
+            color: {WHITE};
+            background: #191919;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            min-height: 28px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+        }}
+
+        QProgressBar#conversionProgress::chunk {{
+            background: {GOLD};
+            border-radius: 9px;
         }}
 
         QPushButton {{
