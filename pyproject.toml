@@ -88,6 +88,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
+preview = true
 select = [
     "A", # erros de colisao com nomes existentes (ex: variaveis com mesmo nome de variaveis built-in do Python, variaveis com mesmo nome de modulos do Python, etc)
     "B", # erros de bugs (ex: variaveis nao usadas, variaveis definidas mais de uma vez, etc)

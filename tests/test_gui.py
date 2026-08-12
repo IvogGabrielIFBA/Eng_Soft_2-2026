@@ -22,7 +22,6 @@ def test_rf003_rf005_interface_aceita_flags_obrigatorias():
     result = runner.invoke(
         app,
         [
-            "convert-command",
             "--input",
             "teste.png",
             "--target",
