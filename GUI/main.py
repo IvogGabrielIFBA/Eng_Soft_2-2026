@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
@@ -28,12 +28,12 @@ def get_base_dir() -> Path:
 BASE_DIR = get_base_dir()
 LOGO_PATH = BASE_DIR / "assets" / "logo-midas.png"
 
-
 GOLD = "#c58b10"
 BLACK = "#000000"
 WHITE = "#ffffff"
 DARK_BUTTON = "#1f1f1f"
 PANEL_BG = "#080808"
+CONVERSION_FORMATS = ("jpg", "png", "pdf", "bmp")
 
 MENU_CONTENT = {
     "Recursos": {
@@ -42,20 +42,12 @@ MENU_CONTENT = {
             "Conversao rapida para arquivos do dia a dia.\n\n"
             "- Conversao local, direto pelo computador\n"
             "- Arquivos preservados sem sobrescrever o original\n"
-            "- Fluxo simples: selecionar, escolher formato e converter\n"
-            
+            "- Fluxo simples: selecionar, escolher formato e converter"
         ),
     },
     "Formatos": {
         "title": "Formatos suportados",
-        "body": (
-            "Imagem\n"
-            "PNG, JPG\n\n"
-            "Documento\n"
-            "PDF\n\n"
-            "Em breve\n"
-            "DOCX, MP4, DOCX outros formatos populares"
-        ),
+        "body": "jpg\npng\npdf\nbmp",
     },
     "Precos": {
         "title": "Precos",
@@ -73,8 +65,8 @@ MENU_CONTENT = {
             "Como usar\n\n"
             "1. Clique em Selecionar arquivo\n"
             "2. Escolha o arquivo desejado\n"
-            "3. Selecione o formato de saida quando a opcao estiver disponivel\n"
-            "4. Clique em Converter agora\n\n"
+            "3. Clique em Converter agora\n"
+            "4. Selecione jpg, png, pdf ou bmp\n\n"
             "O arquivo convertido sera salvo sem alterar o original."
         ),
     },
@@ -89,7 +81,10 @@ class MidasWindow(QMainWindow):
         self.setMinimumSize(980, 620)
         self.status_bar = self.statusBar()
         self.active_menu = None
+        self.selected_file = None
+        self.current_format = None
         self.nav_buttons = {}
+        self.format_buttons = []
 
         root = QWidget()
         root.setObjectName("root")
@@ -155,15 +150,12 @@ class MidasWindow(QMainWindow):
         header.addWidget(nav)
         header.addStretch(1)
 
-        login = QPushButton("Entrar")
-        login.setObjectName("loginButton")
-        login.setCursor(Qt.CursorShape.PointingHandCursor)
-
         convert = QPushButton("Converter agora")
         convert.setObjectName("convertButton")
         convert.setCursor(Qt.CursorShape.PointingHandCursor)
+        convert.clicked.connect(self.toggle_conversion_options)
+        self.convert_button = convert
 
-        header.addWidget(login)
         header.addWidget(convert)
 
         return header
@@ -188,8 +180,28 @@ class MidasWindow(QMainWindow):
         self.info_body.setWordWrap(True)
         self.info_body.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
 
+        self.format_row = QFrame()
+        self.format_row.setObjectName("formatRow")
+        format_layout = QHBoxLayout(self.format_row)
+        format_layout.setContentsMargins(0, 8, 0, 0)
+        format_layout.setSpacing(12)
+
+        for conversion_format in CONVERSION_FORMATS:
+            button = QPushButton(conversion_format.upper())
+            button.setObjectName("formatButton")
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
+            button.clicked.connect(
+                lambda checked=False, file_format=conversion_format: self.start_conversion(
+                    file_format
+                )
+            )
+            self.format_buttons.append(button)
+            format_layout.addWidget(button)
+
         panel_layout.addWidget(self.info_title)
         panel_layout.addWidget(self.info_body)
+        panel_layout.addWidget(self.format_row)
+        self.format_row.hide()
 
         return self.info_panel
 
@@ -237,6 +249,11 @@ class MidasWindow(QMainWindow):
         instruction.setAlignment(Qt.AlignmentFlag.AlignCenter)
         instruction.setWordWrap(True)
 
+        self.selected_file_label = QLabel("Nenhum arquivo selecionado")
+        self.selected_file_label.setObjectName("selectedFile")
+        self.selected_file_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.selected_file_label.setWordWrap(True)
+
         button = QPushButton("Selecionar arquivo")
         button.setObjectName("fileButton")
         button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -244,6 +261,7 @@ class MidasWindow(QMainWindow):
 
         upload_layout.addWidget(icon)
         upload_layout.addWidget(instruction)
+        upload_layout.addWidget(self.selected_file_label)
         upload_layout.addWidget(button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         hero.addWidget(upload, 4)
@@ -254,6 +272,7 @@ class MidasWindow(QMainWindow):
         if self.active_menu == menu_name and self.info_panel.isVisible():
             self.active_menu = None
             self.info_panel.hide()
+            self.format_row.hide()
             self.update_nav_state()
             return
 
@@ -261,8 +280,62 @@ class MidasWindow(QMainWindow):
         self.active_menu = menu_name
         self.info_title.setText(content["title"])
         self.info_body.setText(content["body"])
+        self.format_row.hide()
         self.info_panel.show()
         self.update_nav_state()
+
+    def toggle_conversion_options(self):
+        if self.active_menu == "Converter" and self.info_panel.isVisible():
+            self.active_menu = None
+            self.info_panel.hide()
+            self.format_row.hide()
+            self.update_nav_state()
+            return
+
+        self.active_menu = "Converter"
+        self.info_title.setText("Escolha o formato")
+        self.info_body.setText("Selecione o formato de saida para iniciar a conversao.")
+        self.format_row.show()
+        self.info_panel.show()
+        self.update_nav_state()
+
+    def start_conversion(self, file_format):
+        if not self.selected_file:
+            self.info_title.setText("Selecione um arquivo")
+            self.info_body.setText(
+                "Antes de converter, escolha um arquivo no botao Selecionar arquivo."
+            )
+            self.format_row.show()
+            self.info_panel.show()
+            self.status_bar.showMessage("Selecione um arquivo antes de converter.", 5000)
+            return
+
+        self.current_format = file_format
+        self.convert_button.setEnabled(False)
+        for button in self.format_buttons:
+            button.setEnabled(False)
+
+        self.info_title.setText("Convertendo arquivo")
+        self.info_body.setText(
+            f"Preparando conversao para {file_format.upper()}...\n\nAguarde alguns segundos."
+        )
+        self.format_row.hide()
+        self.info_panel.show()
+        self.status_bar.showMessage("Conversao em andamento...", 3000)
+        QTimer.singleShot(1800, self.finish_conversion)
+
+    def finish_conversion(self):
+        self.convert_button.setEnabled(True)
+        for button in self.format_buttons:
+            button.setEnabled(True)
+
+        file_format = self.current_format or "formato escolhido"
+        self.info_title.setText("Conversao finalizada")
+        self.info_body.setText(
+            f"Arquivo convertido para {file_format.upper()} com sucesso."
+        )
+        self.info_panel.show()
+        self.status_bar.showMessage("Conversao finalizada.", 6000)
 
     def update_nav_state(self):
         for name, button in self.nav_buttons.items():
@@ -281,6 +354,8 @@ class MidasWindow(QMainWindow):
             "Todos os arquivos (*.*)",
         )
         if path:
+            self.selected_file = Path(path)
+            self.selected_file_label.setText(self.selected_file.name)
             self.status_bar.showMessage(f"Arquivo selecionado: {path}", 6000)
 
     def stylesheet(self):
@@ -347,18 +422,6 @@ class MidasWindow(QMainWindow):
             font-weight: 700;
         }}
 
-        QPushButton#loginButton {{
-            color: {WHITE};
-            background: {DARK_BUTTON};
-            border-radius: 28px;
-            min-width: 86px;
-            min-height: 56px;
-        }}
-
-        QPushButton#loginButton:hover {{
-            background: #2a2a2a;
-        }}
-
         QPushButton#convertButton {{
             color: #000000;
             background: {GOLD};
@@ -368,8 +431,23 @@ class MidasWindow(QMainWindow):
         }}
 
         QPushButton#convertButton:hover,
-        QPushButton#fileButton:hover {{
+        QPushButton#fileButton:hover,
+        QPushButton#formatButton:hover {{
             background: #d69c18;
+        }}
+
+        QPushButton#convertButton:disabled,
+        QPushButton#formatButton:disabled {{
+            background: #6f560f;
+            color: #1d1d1d;
+        }}
+
+        QPushButton#formatButton {{
+            color: #000000;
+            background: {GOLD};
+            border-radius: 20px;
+            min-width: 86px;
+            min-height: 40px;
         }}
 
         QLabel#title {{
@@ -403,6 +481,12 @@ class MidasWindow(QMainWindow):
             font-family: Georgia, "Times New Roman", serif;
             font-size: 19px;
             line-height: 1.25;
+        }}
+
+        QLabel#selectedFile {{
+            color: #b8b8b8;
+            font-size: 12px;
+            font-weight: 600;
         }}
 
         QPushButton#fileButton {{
