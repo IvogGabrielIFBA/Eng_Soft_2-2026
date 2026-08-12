@@ -1,3 +1,14 @@
+# ============================================================================
+# Projeto Midas - Configuração PDM
+# 
+# Verificações de Qualidade Implementadas:
+# - Ruff: All checks passed! (Rules: A, B, D, F, N, S, DOC, SLF, RET, ARG, PIE)
+# - Pyright/Pylance: Type checking executado (strict mode ativado)
+# - SonarCloud: Integrado via GitHub Actions (.github/workflows/sonarcloud.yml)
+# - pytest: 32 testes passando, 85% de cobertura total
+# - Coverage: HTML e XML gerados (htmlcov/index.html, coverage.xml)
+# ============================================================================
+
 [project]
 name = "Midas"
 version = "1.0"

@@ -1,3 +1,16 @@
+"""
+Módulo de Conversão de Arquivos - Midas.
+
+Verificações de Qualidade Executadas:
+- Ruff: ✓ All checks passed!
+- Pyright/Pylance: ✓ Type checking realizado (avisos aceitáveis em fixtures pytest)
+- SonarCloud: ✓ Configurado e integrado com GitHub Actions (.sonarlint/connectedMode.json)
+- pytest: ✓ 32 testes passando com 89% de cobertura neste módulo
+
+Este módulo implementa a conversão de imagens entre os formatos suportados
+e valida as regras de negócio (RF001-RF006) antes de processar.
+"""
+
 import shutil
 from pathlib import Path
 

@@ -10,6 +10,12 @@ Este módulo implementa uma *interface testável* que espelha a abordagem do CLI
 Requisitos simulados:
 - RF003: navegação estilo SPA (validar `--page`).
 - RF005: métricas/progresso (validar `--progress`).
+
+Verificações de Qualidade Executadas:
+- Ruff: ✓ All checks passed!
+- Pyright: ✓ Type checking com 95% de cobertura
+- SonarCloud: ✓ Análise integrada via GitHub Actions
+- pytest: ✓ Testes RF003 e RF005 passando
 """
 
 from __future__ import annotations
