@@ -206,6 +206,8 @@ class MidasWindow(QMainWindow):
         self.progress_bar.setObjectName("conversionProgress")
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(0)
+        self.progress_bar.setFormat("%p%")
+        self.progress_bar.setFixedHeight(28)
         self.progress_bar.setTextVisible(True)
         self.progress_bar.hide()
 
@@ -286,6 +288,7 @@ class MidasWindow(QMainWindow):
             self.info_panel.hide()
             self.format_row.hide()
             self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.update_nav_state()
             return
 
@@ -295,6 +298,7 @@ class MidasWindow(QMainWindow):
         self.info_body.setText(content["body"])
         self.format_row.hide()
         self.progress_bar.hide()
+        self.info_panel.setMinimumHeight(164)
         self.info_panel.show()
         self.update_nav_state()
 
@@ -304,6 +308,7 @@ class MidasWindow(QMainWindow):
             self.info_panel.hide()
             self.format_row.hide()
             self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.update_nav_state()
             return
 
@@ -311,6 +316,7 @@ class MidasWindow(QMainWindow):
         self.info_title.setText("Escolha o formato")
         self.info_body.setText("Selecione o formato de saida para iniciar a conversao.")
         self.progress_bar.hide()
+        self.info_panel.setMinimumHeight(164)
         self.format_row.show()
         self.info_panel.show()
         self.update_nav_state()
@@ -322,6 +328,7 @@ class MidasWindow(QMainWindow):
                 "Antes de converter, escolha um arquivo no botao Selecionar arquivo."
             )
             self.progress_bar.hide()
+            self.info_panel.setMinimumHeight(164)
             self.format_row.show()
             self.info_panel.show()
             self.status_bar.showMessage("Selecione um arquivo antes de converter.", 5000)
@@ -339,13 +346,16 @@ class MidasWindow(QMainWindow):
         self.info_body.setText(
             f"Preparando conversao para {file_format.upper()}...\n\nAcompanhe o progresso abaixo."
         )
+        self.info_panel.setMinimumHeight(210)
         self.format_row.hide()
         self.info_panel.show()
+        self.progress_bar.show()
+        QApplication.processEvents()
         self.status_bar.showMessage("Conversao em andamento...", 3000)
-        self.progress_timer.start(120)
+        self.progress_timer.start(80)
 
     def update_conversion_progress(self):
-        self.progress_value += 5
+        self.progress_value += 2
         self.progress_bar.setValue(self.progress_value)
 
         if self.progress_value >= 100:
@@ -450,7 +460,7 @@ class MidasWindow(QMainWindow):
             background: #191919;
             border: 1px solid #2d2d2d;
             border-radius: 10px;
-            min-height: 22px;
+            min-height: 28px;
             text-align: center;
             font-size: 12px;
             font-weight: 700;
