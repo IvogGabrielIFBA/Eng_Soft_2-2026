@@ -5,11 +5,6 @@ Este módulo define a estrutura de comandos, flags e parâmetros
 utilizando a biblioteca Typer. É responsável por traduzir as 
 entradas do terminal em ações para o Core do sistema (RF002).
 """
-
-from pathlib import Path
-
-import typer
-from rich.console import Console
 from rich.progress import (
     BarColumn,
     Progress,
@@ -17,15 +12,35 @@ from rich.progress import (
     TaskProgressColumn,
     TextColumn,
 )
+from rich.console import Console
+import typer
+from pathlib import Path
 
 # Importação hipotética do módulo do seu colega.
 # Ajuste o import conforme a estrutura real do projeto.
-from python_pdm_template.converter import converter_arquivo
-
+from python_pdm_template.conversion_core import converter_em_massa
 app = typer.Typer(help="CLI para conversão de arquivos de imagem e documentos.")
+
 console = Console()
 
+
+@app.callback()
+def main():
+    """Interface principal da aplicação."""
+    pass
+
+
 FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}
+
+
+def converter_arquivo(origem, formato):
+    """Compatibilidade com os testes antigos da CLI."""
+    resultados = converter_em_massa([origem], formato)
+
+    if not resultados:
+        raise ValueError("Nenhum arquivo foi convertido.")
+
+    return resultados[0]
 
 
 @app.command("convert")
@@ -98,7 +113,10 @@ def convert_command(
                 # solicitar a mudança no Core.
                 # Exemplo ideal: converter_arquivo(str(arquivo_atual), formato_limpo, str(diretorio), force)
 
-                resultado = converter_arquivo(str(arquivo_atual), formato_limpo)
+                resultado = converter_arquivo(
+                    str(arquivo_atual),
+                    formato_limpo,
+                )
                 sucessos += 1
                 progress.console.print(f"[green]✓ {arquivo_atual.name} -> {resultado}[/green]")
             except Exception as e:
