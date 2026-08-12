@@ -121,6 +121,7 @@ ignore=[
     "D202",
     "D210", # No whitespace allowed surrounding docstring text
     "D212", # Multi-line docstring summary should start at the first line
+    "DOC201", # Do not require Returns sections in concise test and fixture docstrings
     "PLR0133",
     "PLR2004",
     "S101", # Use of assert detected. 

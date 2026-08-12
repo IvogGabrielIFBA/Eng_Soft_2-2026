@@ -20,7 +20,13 @@ FORMATOS_SUPORTADOS = ["png", "jpg", "pdf"]
 
 
 def converter_arquivo(arquivo: str, formato_destino: str) -> str:
-    """Realiza a conversão de arquivos de imagem."""
+    """Realiza a conversão de arquivos de imagem.
+
+    Raises:
+        FileNotFoundError: Se o arquivo de origem não existir.
+        ValueError: Se o arquivo estiver vazio, corrompido ou o formato for inválido.
+        OSError: Se não houver espaço em disco para a conversão.
+    """
     caminho = Path(arquivo)
 
     # RF001 - Arquivo existe

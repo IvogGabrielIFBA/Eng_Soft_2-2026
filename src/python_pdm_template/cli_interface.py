@@ -32,16 +32,32 @@ app = typer.Typer(help="CLI para conversão de arquivos de imagem e documentos."
 console = Console()
 
 
-@app.callback()
-def main() -> None:
-    """Interface principal da aplicação."""
+@app.callback(invoke_without_command=True)
+def main(
+    contexto: typer.Context,
+    origem: str | None = typer.Option(None, "--input", "-i", help="Caminho do arquivo de origem."),
+    formato: str | None = typer.Option(None, "--format", "-ext", help="Formato de destino."),
+) -> None:
+    """Aceita a forma legada da CLI sem o subcomando ``convert``.
+
+    Raises:
+        typer.BadParameter: Se a chamada direta não informar entrada e formato.
+    """
+    if contexto.invoked_subcommand is not None:
+        return
+    if origem is None or formato is None:
+        raise typer.BadParameter("Use --input e --format, ou o subcomando convert.")
 
 
 FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}
 
 
 def converter_arquivo(origem: str, formato: str) -> str:
-    """Compatibilidade com os testes antigos da CLI."""
+    """Compatibilidade com os testes antigos da CLI.
+
+    Raises:
+        ValueError: Se nenhum arquivo puder ser convertido.
+    """
     resultados = converter_em_massa([origem], formato)
 
     if not resultados:
@@ -74,7 +90,11 @@ def convert_command(
         help="Força a sobrescrita caso o arquivo de destino já exista."
     )
 ):
-    """Executa o processo de conversão em lote ou individual (RF002, RF004, RF005)."""
+    """Executa o processo de conversão em lote ou individual (RF002, RF004, RF005).
+
+    Raises:
+        typer.Exit: Se o formato for inválido ou não houver arquivos para converter.
+    """
     # Valida formato antes de iniciar varreduras no disco
     formato_limpo = formato.lower().replace(".", "")
     if formato_limpo not in FORMATOS_SUPORTADOS:
@@ -154,7 +174,11 @@ def convert_command_compat(
         help="Formato de destino."
     ),
 ):
-    """Comando de compatibilidade para o RF002."""
+    """Comando de compatibilidade para o RF002.
+
+    Raises:
+        typer.Exit: Se o formato de destino não for suportado.
+    """
     formato_limpo = destino.lower().replace(".", "")
 
     if formato_limpo not in FORMATOS_SUPORTADOS:
