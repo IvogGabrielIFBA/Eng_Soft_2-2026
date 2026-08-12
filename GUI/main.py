@@ -19,17 +19,15 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-
-ROOT_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT_DIR))
+from src.converter import converter_arquivo
 
 
 def get_base_dir() -> Path:
-    """Base directory for resources (works with PyInstaller onefile)."""
+    """Return the base directory used to locate application resources."""
 
-    if getattr(sys, "_MEIPASS", None):
-        return Path(sys._MEIPASS)  # type: ignore[attr-defined]
+    pyinstaller_dir = getattr(sys, "_MEIPASS", None)
+    if pyinstaller_dir:
+        return Path(pyinstaller_dir)
     return Path(__file__).resolve().parent
 
 
@@ -82,7 +80,10 @@ MENU_CONTENT = {
 
 
 class MidasWindow(QMainWindow):
-    def __init__(self):
+    """Main window of the Midas file-conversion application."""
+
+    def __init__(self) -> None:
+        """Initialize the application window and its widgets."""
         super().__init__()
         self.setWindowTitle("Midas - Conversor de Arquivos")
         self.resize(1180, 760)
@@ -117,7 +118,8 @@ class MidasWindow(QMainWindow):
 
         self.setStyleSheet(self.stylesheet())
 
-    def build_header(self):
+    def build_header(self) -> QHBoxLayout:
+        """Create the header with navigation and conversion controls."""
         header = QHBoxLayout()
         header.setSpacing(24)
 
@@ -153,7 +155,7 @@ class MidasWindow(QMainWindow):
             item.setProperty("active", False)
             item.setCursor(Qt.CursorShape.PointingHandCursor)
             item.clicked.connect(
-                lambda checked=False, menu_name=text: self.toggle_menu_info(menu_name)
+                lambda _checked=False, menu_name=text: self.toggle_menu_info(menu_name)
             )
             self.nav_buttons[text] = item
             nav_layout.addWidget(item)
@@ -171,7 +173,8 @@ class MidasWindow(QMainWindow):
 
         return header
 
-    def build_info_panel(self):
+    def build_info_panel(self) -> QFrame:
+        """Create the panel that displays menu information and conversion status."""
         self.info_panel = QFrame()
         self.info_panel.setObjectName("infoPanel")
         self.info_panel.setFixedWidth(620)
@@ -202,7 +205,7 @@ class MidasWindow(QMainWindow):
             button.setObjectName("formatButton")
             button.setCursor(Qt.CursorShape.PointingHandCursor)
             button.clicked.connect(
-                lambda checked=False, file_format=conversion_format: self.start_conversion(
+                lambda _checked=False, file_format=conversion_format: self.start_conversion(
                     file_format
                 )
             )
@@ -226,7 +229,8 @@ class MidasWindow(QMainWindow):
 
         return self.info_panel
 
-    def build_hero(self):
+    def build_hero(self) -> QHBoxLayout:
+        """Create the main content area of the window."""
         hero = QHBoxLayout()
         hero.setSpacing(70)
 
@@ -289,7 +293,8 @@ class MidasWindow(QMainWindow):
 
         return hero
 
-    def toggle_menu_info(self, menu_name):
+    def toggle_menu_info(self, menu_name: str) -> None:
+        """Show or hide the informational panel for a navigation item."""
         if self.active_menu == menu_name and self.info_panel.isVisible():
             self.active_menu = None
             self.info_panel.hide()
@@ -309,7 +314,8 @@ class MidasWindow(QMainWindow):
         self.info_panel.show()
         self.update_nav_state()
 
-    def toggle_conversion_options(self):
+    def toggle_conversion_options(self) -> None:
+        """Show or hide the available output-format options."""
         if self.active_menu == "Converter" and self.info_panel.isVisible():
             self.active_menu = None
             self.info_panel.hide()
@@ -328,7 +334,8 @@ class MidasWindow(QMainWindow):
         self.info_panel.show()
         self.update_nav_state()
 
-    def start_conversion(self, file_format):
+    def start_conversion(self, file_format: str) -> None:
+        """Start the visual progress flow for the selected output format."""
         if not self.selected_file:
             self.info_title.setText("Selecione um arquivo")
             self.info_body.setText(
@@ -361,7 +368,8 @@ class MidasWindow(QMainWindow):
         self.status_bar.showMessage("Conversao em andamento...", 3000)
         self.progress_timer.start(80)
 
-    def update_conversion_progress(self):
+    def update_conversion_progress(self) -> None:
+        """Advance progress and finalize the conversion when it completes."""
         self.progress_value += 2
         self.progress_bar.setValue(self.progress_value)
 
@@ -369,10 +377,11 @@ class MidasWindow(QMainWindow):
             self.progress_timer.stop()
             self.finish_conversion()
 
-    def finish_conversion(self):
+    def finish_conversion(self) -> None:
+        """Convert the selected file and present its result or error message."""
         file_format = self.current_format or "formato escolhido"
 
-        try:
+        try:  # noqa: PLW0717 - UI state is updated together after conversion.
             resultado = converter_arquivo(
                 str(self.selected_file),
                 file_format,
@@ -415,16 +424,19 @@ class MidasWindow(QMainWindow):
                 6000,
             )
 
-    def update_nav_state(self):
+    def update_nav_state(self) -> None:
+        """Refresh visual state of navigation buttons."""
         for name, button in self.nav_buttons.items():
             button.setProperty("active", name == self.active_menu)
             button.style().unpolish(button)
             button.style().polish(button)
 
-    def on_select_file_clicked(self):
+    def on_select_file_clicked(self) -> None:
+        """Handle a click on the file selection button."""
         self.select_file()
 
-    def select_file(self):
+    def select_file(self) -> None:
+        """Open a file picker and retain the selected input file."""
         path, _ = QFileDialog.getOpenFileName(
             self,
             "Selecionar arquivo",
@@ -436,7 +448,9 @@ class MidasWindow(QMainWindow):
             self.selected_file_label.setText(self.selected_file.name)
             self.status_bar.showMessage(f"Arquivo selecionado: {path}", 6000)
 
-    def stylesheet(self):
+    @staticmethod
+    def stylesheet() -> str:
+        """Return the Qt style sheet used by the application window."""
         return f"""
         QWidget#root {{
             background: {BLACK};
@@ -598,7 +612,8 @@ class MidasWindow(QMainWindow):
         """
 
 
-def main():
+def main() -> None:
+    """Launch the graphical application."""
     app = QApplication(sys.argv)
     app.setFont(QFont("Arial"))
 
