@@ -5,9 +5,9 @@ name: Integracao Continua
 #     Veja https://docs.github.com/pt/actions/using-workflows/events-that-trigger-workflows para mais opções de eventos
 on:
   push:
-    branches: [feature]
+    branches: [master, feature]
   pull_request:
-    branches: [feature, Development]
+    branches: [master, feature, Development]
   workflow_dispatch:
 
 
@@ -22,9 +22,10 @@ jobs:
       matrix:
         # Testa em múltiplos sistemas operacionais
         os: [windows-latest]
-        # Testa com a versão mais recente do Python 3
+        # O pdm.lock foi gerado para Python 3.13; não usar "3.x",
+        # pois ele pode selecionar uma versão ainda não suportada.
         python-version:
-          - "3.x"
+          - "3.13"
 
     steps:
       # Faz o checkout do código-fonte do repositório
@@ -57,9 +58,18 @@ jobs:
           pdm run pip check                  # Checa integridade dos pacotes
         shell: bash
 
-      - name: Rodar ruff
-        run: python -m pdm run ruff check src/
+      - name: Rodar Ruff (Linter)
+        run: pdm run ruff check src tests
 
-      - name: Rodar pytest
-        run: python -m pdm run pytest tests/
-      # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
+      - name: Rodar Pyright (Type Checking)
+        run: pdm run pyright
+
+      - name: Rodar pytest com coverage
+        run: pdm run pytest tests --cov=src --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
