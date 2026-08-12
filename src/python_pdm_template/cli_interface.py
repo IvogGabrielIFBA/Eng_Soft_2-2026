@@ -41,7 +41,7 @@ def main() -> None:
 FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}
 
 
-def converter_arquivo(origem, formato):
+def converter_arquivo(origem: str, formato: str) -> str:
     """Compatibilidade com os testes antigos da CLI."""
     resultados = converter_em_massa([origem], formato)
 

@@ -50,18 +50,18 @@ addopts = "--cache-clear --ff --cov=src --cov-report=html --cov-report=term --co
 
 [tool.pyright]
 languageServer = "Pylance"   # Use Pylance como servidor de linguagem
-diagnosticMode= "workspace"     # Modo de diagnóstico para todo o workspace (em vez de apenas arquivos abertos)
-typeCheckingMode = "strict"     # Modo de verificação de tipos estrito para detectar mais erros
-extraPaths = ["src"]            # Adicionar o diretório src ao caminho de pesquisa para resolver importações
-indexing = true                 # Habilitar indexação para melhor navegação e autocompletar
-useLibraryCodeForTypes = true   # Usar código de biblioteca para inferir tipos, o que pode melhorar a precisão da análise de tipos para bibliotecas de terceiros
+diagnosticMode= "workspace"     # Modo de diagnóstico para todo o workspace
+typeCheckingMode = "strict"     # Modo de verificação de tipos estrito
+extraPaths = ["src"]            # Adicionar o diretório src ao caminho de pesquisa
+indexing = true                 # Habilitar indexação para melhor navegação
+useLibraryCodeForTypes = true   # Usar código de biblioteca para inferir tipos
 
-# veja opcoes disponiveis em hhttps://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings
+# veja opcoes disponiveis em https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings
 
 # CODE ISSUES
-reportImportCycles = "error"      # Importacao circular - importacoes que criam ciclos entre modulos
-reportUnreachable = "error"             # unreachable code
-reportUnnecessaryIsInstance = "none" # isinstance() call that can be simplified
+reportImportCycles = "error"      # Importacao circular
+reportUnreachable = "error"       # unreachable code
+reportUnnecessaryIsInstance = "none" # isinstance() simplification
 
 # TYPE ISSUES
 reportMissingReturnType = "warning" # Missing return types
@@ -69,10 +69,10 @@ reportMissingParameterType = "warning" # Missing parameter types
 reportUnknownLambdaType = "none" # lambda functions with unknown types
 
 # INHERITANCE ISSUES
-reportMissingSuperCall = "error"           # missing super() call in a constructor
+reportMissingSuperCall = "error"           # missing super() call in constructor
 reportUninitializedInstanceVariable = "error"  # uninitialized instance variables
-reportPropertyTypeMismatch = "error" # Property type mismatch - type of property does not match type of getter/setter
-reportImplicitOverride="error" # method overrides a method in the base class but is not marked with @override
+reportPropertyTypeMismatch = "error" # Property type mismatch
+reportImplicitOverride="error" # method overrides without @override
 
 # Include files for analysis
 include = [

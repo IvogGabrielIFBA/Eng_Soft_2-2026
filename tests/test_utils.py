@@ -11,12 +11,13 @@ comportamentos durante o teste.
 O objetivo é demonstrar como usar o pytest e seus recursos para criar testes eficazes.
 """
 
+import pytest
 from python_pdm_template.utils import obter_mensagem, somar
 
 # Teste simples
 
 
-def test_somar():
+def test_somar() -> None:
     """Teste simples para a função somar."""
     resultado = somar(6, 4)
     assert resultado == 10  # noqa: PLR2004
@@ -24,7 +25,7 @@ def test_somar():
 # Teste com monkeypatching
 
 
-def test_obter_mensagem(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
+def test_obter_mensagem(monkeypatch: pytest.MonkeyPatch) -> None:
     """Teste de obter_mensagem em modo não interativo.
 
     Alteração efetuada por IA: obter_mensagem deixou de depender de input()
@@ -33,7 +34,7 @@ def test_obter_mensagem(monkeypatch):  # pyright: ignore[reportMissingParameterT
 
     # Mantemos o monkeypatch aqui para não quebrar a estrutura original do teste,
     # mas a função não deve chamar input() mais.
-    def mensagem_alternativa(prompt: str):  # noqa: ARG001
+    def mensagem_alternativa(prompt: str) -> str:  # noqa: ARG001
         return "Mensagem modificada"
 
     monkeypatch.setattr("builtins.input", mensagem_alternativa)  # pyright: ignore[reportUnknownMemberType]
@@ -43,10 +44,10 @@ def test_obter_mensagem(monkeypatch):  # pyright: ignore[reportMissingParameterT
 
 #o codigo abaixo utilizou IA para serem criados
 
-def teste_carregamento(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
-    def valoralterado(prompt: str):  # noqa: ARG001
+def teste_carregamento(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test carregamento function."""
+    def valoralterado(prompt: str) -> str:  # noqa: ARG001
         return "60"
-
 
     # Alteração efetuada por IA: como o projeto deixou de depender de input
     # nas rotinas finais, este teste passou a validar o valor fixo esperado.
@@ -55,8 +56,9 @@ def teste_carregamento(monkeypatch):  # pyright: ignore[reportMissingParameterTy
 
 
 
-def teste_de_arquivo_de_com_mesmo_nome(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
-    def nome_alterado(prompt: str):  # noqa: ARG001
+def teste_de_arquivo_de_com_mesmo_nome(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test arquivo de com mesmo nome functionality."""
+    def nome_alterado(prompt: str) -> str:  # noqa: ARG001
         return "Nome modificado"
 
     # Alteração efetuada por IA: como as rotinas finais deixaram de depender

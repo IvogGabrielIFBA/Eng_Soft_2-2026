@@ -10,6 +10,7 @@ Foco:
 """
 
 from typer.testing import CliRunner
+import pytest
 
 from python_pdm_template.gui_interface import app
 
@@ -80,8 +81,9 @@ def test_rf005_falha_se_progress_fora_do_intervalo():
     assert result.exit_code != 0
 
 
-def teste_interface_spa(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
-    def valor_alterado(prompt: str):  # noqa: ARG001
+def teste_interface_spa(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test SPA interface functionality."""
+    def valor_alterado(prompt: str) -> str:  # noqa: ARG001
         return "Valor modificado"
 
     # Alteração efetuada por IA: como as rotinas finais deixaram de depender de input,
@@ -90,8 +92,9 @@ def teste_interface_spa(monkeypatch):  # pyright: ignore[reportMissingParameterT
     assert "Valor modificado" == "Valor modificado"
 
 
-def teste_selecao_multiplos_arquivos(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
-    def valor_alterado(prompt: str):  # noqa: ARG001
+def teste_selecao_multiplos_arquivos(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test multiple file selection."""
+    def valor_alterado(prompt: str) -> str:  # noqa: ARG001
         return "Valor modificado"
 
     # Alteração efetuada por IA: como as rotinas finais deixaram de depender de input,

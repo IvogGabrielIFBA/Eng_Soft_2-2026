@@ -1,12 +1,13 @@
 """Testes para a conversão de imagens no módulo principal."""
 
 import pytest
+from pathlib import Path
 from PIL import Image
 
 from src.converter import converter_arquivo
 
 
-def test_formato_invalido(tmp_path):
+def test_formato_invalido(tmp_path: Path) -> None:
     """Deve rejeitar um formato de destino inválido."""
     arquivo = tmp_path / "teste.png"
 
@@ -23,7 +24,7 @@ def test_arquivo_inexistente():
         converter_arquivo("arquivo_fake.png", "jpg")
 
 
-def test_conversao_implementada(tmp_path):
+def test_conversao_implementada(tmp_path: Path) -> None:
     """Deve converter uma imagem válida para o formato solicitado."""
     arquivo = tmp_path / "teste.png"
 

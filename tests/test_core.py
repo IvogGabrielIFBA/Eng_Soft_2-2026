@@ -13,7 +13,7 @@ from PIL import Image
 from python_pdm_template.conversion_core import converter, converter_em_massa
 
 
-def test_converter_deve_converter_imagem_para_png(tmp_path):
+def test_converter_deve_converter_imagem_para_png(tmp_path: Path) -> None:
     arquivo_entrada = tmp_path / "imagem.jpg"
 
     imagem = Image.new("RGB", (100, 100), "red")
@@ -36,7 +36,7 @@ def test_converter_deve_rejeitar_arquivo_inexistente():
     except FileNotFoundError as erro:
         assert str(erro) == "Arquivo não encontrado."
 
-def test_converter_deve_evitar_sobrescrever_arquivo_existente(tmp_path):
+def test_converter_deve_evitar_sobrescrever_arquivo_existente(tmp_path: Path) -> None:
     arquivo_entrada = tmp_path / "imagem.jpg"
     arquivo_existente = tmp_path / "imagem.png"
 
@@ -55,7 +55,7 @@ def test_converter_deve_evitar_sobrescrever_arquivo_existente(tmp_path):
     assert arquivo_existente.exists()
 
 
-def test_converter_deve_rejeitar_arquivo_vazio(tmp_path):
+def test_converter_deve_rejeitar_arquivo_vazio(tmp_path: Path) -> None:
     arquivo_vazio = tmp_path / "vazio.jpg"
     arquivo_vazio.touch()
 
@@ -66,7 +66,7 @@ def test_converter_deve_rejeitar_arquivo_vazio(tmp_path):
         assert str(erro) == "Arquivo vazio."
 
 
-def test_converter_deve_rejeitar_formato_nao_suportado(tmp_path):
+def test_converter_deve_rejeitar_formato_nao_suportado(tmp_path: Path) -> None:
     arquivo_entrada = tmp_path / "imagem.jpg"
 
     imagem = Image.new("RGB", (100, 100), "red")
@@ -79,7 +79,7 @@ def test_converter_deve_rejeitar_formato_nao_suportado(tmp_path):
         assert str(erro) == "Formato não suportado."
 
 
-def test_converter_deve_rejeitar_arquivo_corrompido(tmp_path):
+def test_converter_deve_rejeitar_arquivo_corrompido(tmp_path: Path) -> None:
     arquivo_corrompido = tmp_path / "corrompido.jpg"
 
     arquivo_corrompido.write_text("Este arquivo não é uma imagem válida.")
@@ -91,7 +91,7 @@ def test_converter_deve_rejeitar_arquivo_corrompido(tmp_path):
         assert str(erro) == "Arquivo corrompido."
 
 
-def test_converter_em_massa_deve_converter_multiplos_arquivos(tmp_path):
+def test_converter_em_massa_deve_converter_multiplos_arquivos(tmp_path: Path) -> None:
     arquivo_1 = tmp_path / "imagem1.jpg"
     arquivo_2 = tmp_path / "imagem2.jpg"
 
@@ -111,7 +111,7 @@ def test_converter_em_massa_deve_converter_multiplos_arquivos(tmp_path):
     assert Path(resultados[1]).suffix == ".png"
 
 
-def test_converter_em_massa_deve_converter_arquivos_de_um_diretorio(tmp_path):
+def test_converter_em_massa_deve_converter_arquivos_de_um_diretorio(tmp_path: Path) -> None:
     diretorio = tmp_path / "imagens"
     diretorio.mkdir()
 
@@ -132,7 +132,7 @@ def test_converter_em_massa_deve_converter_arquivos_de_um_diretorio(tmp_path):
     assert all(Path(resultado).suffix == ".png" for resultado in resultados)
 
 
-def test_converter_em_massa_deve_ignorar_arquivos_nao_suportados(tmp_path):
+def test_converter_em_massa_deve_ignorar_arquivos_nao_suportados(tmp_path: Path) -> None:
     diretorio = tmp_path / "imagens"
     diretorio.mkdir()
 
@@ -154,8 +154,8 @@ def test_converter_em_massa_deve_ignorar_arquivos_nao_suportados(tmp_path):
     assert Path(resultados[0]).name == "imagem.png"
 
 def test_converter_em_massa_deve_aceitar_arquivos_e_diretorio(
-    tmp_path,
-):
+    tmp_path: Path,
+) -> None:
     diretorio = tmp_path / "imagens"
     diretorio.mkdir()
 
@@ -181,7 +181,7 @@ def test_converter_em_massa_deve_aceitar_arquivos_e_diretorio(
         assert Path(resultado).suffix == ".png"
 
 
-def test_converter_em_massa_deve_rejeitar_arquivo_corrompido(tmp_path):
+def test_converter_em_massa_deve_rejeitar_arquivo_corrompido(tmp_path: Path) -> None:
     arquivo_valido = tmp_path / "imagem.jpg"
     arquivo_corrompido = tmp_path / "corrompida.jpg"
 
@@ -200,7 +200,7 @@ def test_converter_em_massa_deve_rejeitar_arquivo_corrompido(tmp_path):
         assert str(erro) == "Arquivo corrompido."
 
 
-def test_converter_em_massa_deve_retornar_lista_de_resultados(tmp_path):
+def test_converter_em_massa_deve_retornar_lista_de_resultados(tmp_path: Path) -> None:
     arquivo_1 = tmp_path / "imagem1.jpg"
     arquivo_2 = tmp_path / "imagem2.jpg"
 

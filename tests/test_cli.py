@@ -1,17 +1,12 @@
-"""
-Suíte de testes para a Interface de Linha de Comando (CLI).
+"""Suíte de testes para a Interface de Linha de Comando (CLI).
 
 Este módulo valida o processamento de argumentos, flags e a integração 
 dos comandos do terminal com o motor de conversão, garantindo o 
 cumprimento do requisito funcional RF002.
 """
 
-"""
-Suíte de testes para a Interface de Linha de Comando (CLI).
-Valida RF002, RF004 e RF005.
-"""
-
-from unittest.mock import patch
+from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 from typer.testing import CliRunner
 import pytest
@@ -22,14 +17,14 @@ runner = CliRunner()
 
 # Fixtures para criar cenários de teste reais no disco
 @pytest.fixture
-def mock_arquivo(tmp_path):
+def mock_arquivo(tmp_path: Path) -> Path:
     """Cria um arquivo de imagem fictício para testes."""
     arquivo = tmp_path / "teste.png"
     arquivo.write_text("conteudo falso")
     return arquivo
 
 @pytest.fixture
-def mock_pasta(tmp_path):
+def mock_pasta(tmp_path: Path) -> Path:
     """Cria uma pasta com múltiplos arquivos para teste de lote."""
     pasta = tmp_path / "lote"
     pasta.mkdir()
@@ -43,7 +38,7 @@ def test_rf002_interface_falha_sem_parametros_obrigatorios():
     assert result.exit_code != 0
     assert "Missing option" in result.output
 
-def test_rf002_interface_rejeita_formato_invalido(mock_arquivo):
+def test_rf002_interface_rejeita_formato_invalido(mock_arquivo: Path) -> None:
     """Garante que formatos fora de FORMATOS_SUPORTADOS sejam barrados."""
     result = runner.invoke(app, [
         "convert", 
@@ -54,7 +49,7 @@ def test_rf002_interface_rejeita_formato_invalido(mock_arquivo):
     assert "não suportado" in result.output.lower()
 
 @patch("python_pdm_template.cli_interface.converter_arquivo")
-def test_rf002_interface_sucesso_arquivo_unico(mock_converter, mock_arquivo):
+def test_rf002_interface_sucesso_arquivo_unico(mock_converter: MagicMock, mock_arquivo: Path) -> None:
     """Valida o fluxo nominal com um único arquivo, mockando o Core."""
     mock_converter.return_value = "resultado.jpg"
     
@@ -70,7 +65,7 @@ def test_rf002_interface_sucesso_arquivo_unico(mock_converter, mock_arquivo):
     mock_converter.assert_called_once_with(str(mock_arquivo), "jpg")
 
 @patch("python_pdm_template.cli_interface.converter_arquivo")
-def test_rf004_interface_conversao_em_lote(mock_converter, mock_pasta):
+def test_rf004_interface_conversao_em_lote(mock_converter: MagicMock, mock_pasta: Path) -> None:
     """Verifica se o CLI processa diretórios inteiros (RF004)."""
     mock_converter.return_value = "resultado.jpg"
     expected_calls = 2

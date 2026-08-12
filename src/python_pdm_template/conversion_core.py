@@ -46,7 +46,7 @@ def converter_em_massa(
     Returns:
         Lista com os caminhos dos arquivos convertidos.
     """
-    resultados = []
+    resultados: list[str] = []
 
     formatos_entrada = {".jpg", ".jpeg", ".png"}
 
@@ -54,7 +54,7 @@ def converter_em_massa(
         caminho = Path(entrada)
 
         if caminho.is_dir():
-            arquivos_do_diretorio = [
+            arquivos_do_diretorio: list[Path] = [
                 arquivo
                 for arquivo in caminho.iterdir()
                 if arquivo.is_file()
