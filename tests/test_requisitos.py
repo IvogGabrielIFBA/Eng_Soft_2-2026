@@ -14,11 +14,8 @@ from python_pdm_template.cli_interface import app
 runner = CliRunner()
 
 
-def test_rf002_sistema_prove_comandos_via_terminal():
-    """
-    Testa o Requisito Funcional 002: Suporte a flags e parâmetros tipados.
-    """
-
+def test_rf002_sistema_prove_comandos_via_terminal() -> None:
+    """Testa o Requisito Funcional 002: Suporte a flags e parâmetros tipados."""
     # Executa o comando definido na sua interface CLI
     result = runner.invoke(app, ["--input", "teste.png", "--format", "pdf"])
 
@@ -26,9 +23,8 @@ def test_rf002_sistema_prove_comandos_via_terminal():
     assert result.exit_code == 0
 
 
-def test_rf002_sistema_obriga_parametros_entrada():
+def test_rf002_sistema_obriga_parametros_entrada() -> None:
     """Valida se a tipagem e obrigatoriedade do RF002 estão funcionando."""
-
     # Tenta rodar sem a flag obrigatória --input
     result = runner.invoke(app, ["--format", "pdf"])
 

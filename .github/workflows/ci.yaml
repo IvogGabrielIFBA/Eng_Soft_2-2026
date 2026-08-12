@@ -58,36 +58,18 @@ jobs:
           pdm run pip check                  # Checa integridade dos pacotes
         shell: bash
 
-      - name: Rodar ruff
-        run: python -m pdm run ruff check src/
+      - name: Rodar Ruff (Linter)
+        run: pdm run ruff check src tests
 
-      - name: Rodar pytest
-        run: python -m pdm run pytest tests/
-      # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
+      - name: Rodar Pyright (Type Checking)
+        run: pdm run pyright
 
-  sonarcloud:
-    name: SonarCloud analysis
-    runs-on: ubuntu-latest
+      - name: Rodar pytest com coverage
+        run: pdm run pytest tests --cov=src --cov-report=xml --cov-report=term
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Upload coverage to artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          fetch-depth: 0
-
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-
-      - name: Install dependencies and generate coverage report
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pdm
-          pdm install
-          pdm run pytest
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v7
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          name: coverage-report
+          path: coverage.xml
