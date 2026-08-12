@@ -49,8 +49,6 @@ testpaths = ["tests"]
 addopts = "--cache-clear --ff --cov=src --cov-report=html --cov-report=term --cov-report=xml"
 
 [tool.pyright]
-languageServer = "Pylance"   # Use Pylance como servidor de linguagem
-diagnosticMode= "workspace"     # Modo de diagnóstico para todo o workspace
 typeCheckingMode = "strict"     # Modo de verificação de tipos estrito
 extraPaths = ["src"]            # Adicionar o diretório src ao caminho de pesquisa
 indexing = true                 # Habilitar indexação para melhor navegação
@@ -64,7 +62,6 @@ reportUnreachable = "error"       # unreachable code
 reportUnnecessaryIsInstance = "none" # isinstance() simplification
 
 # TYPE ISSUES
-reportMissingReturnType = "warning" # Missing return types
 reportMissingParameterType = "warning" # Missing parameter types
 reportUnknownLambdaType = "none" # lambda functions with unknown types
 

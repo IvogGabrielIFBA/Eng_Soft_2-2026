@@ -83,7 +83,7 @@ def convert_command(
         raise typer.Exit(code=1)
 
     # Identifica se a origem é um arquivo único ou um diretório (RF004)
-    arquivos_para_processar = []
+    arquivos_para_processar: list[Path] = []
     if origem.is_file():
         arquivos_para_processar.append(origem)
     elif origem.is_dir():
