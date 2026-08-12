@@ -57,9 +57,18 @@ jobs:
           pdm run pip check                  # Checa integridade dos pacotes
         shell: bash
 
-      - name: Rodar ruff
-        run: python -m pdm run ruff check src/
+      - name: Rodar Ruff (Linter)
+        run: python -m pdm run ruff check src tests
 
-      - name: Rodar pytest
-        run: python -m pdm run pytest tests/
-      # TODO: Adicione aqui uma etapa para rodar o linter "ruff"
+      - name: Rodar Pyright (Type Checking)
+        run: python -m pdm run pyright
+
+      - name: Rodar pytest com coverage
+        run: python -m pdm run pytest tests --cov=src --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
