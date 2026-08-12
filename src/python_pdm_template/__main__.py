@@ -23,7 +23,6 @@ from python_pdm_template.utils import arquivo_de_com_mesmo_nome
 
 def main():
     """Função principal que exibe uma mensagem de boas-vindas."""
-
     print()
     primeiro_valor= 6
     segundo_valor = 4

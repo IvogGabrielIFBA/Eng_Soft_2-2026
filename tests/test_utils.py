@@ -56,12 +56,12 @@ def teste_carregamento(monkeypatch):  # pyright: ignore[reportMissingParameterTy
 
 
 def teste_de_arquivo_de_com_mesmo_nome(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
-    def nomeALterado(prompt: str):  # noqa: ARG001
+    def nome_alterado(prompt: str):  # noqa: ARG001
         return "Nome modificado"
 
     # Alteração efetuada por IA: como as rotinas finais deixaram de depender
     # de input para os testes de retorno fixo, este teste valida o fluxo fixo.
-    monkeypatch.setattr("builtins.input", nomeALterado)  # pyright: ignore[reportUnknownMemberType]
+    monkeypatch.setattr("builtins.input", nome_alterado)  # pyright: ignore[reportUnknownMemberType]
     assert "Nome modificado" == "Nome modificado"
 
 

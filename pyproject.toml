@@ -101,10 +101,19 @@ select = [
 ]
 
 ignore=[
+    "ARG001",
+    "B008", # Typer's Option/Argument call pattern is expected in CLI apps
+    "B011",
     "B017", # assert ExceptionType is not specific enough
     "B021", # f-string docstrings 
+    "D100", # Module docstrings are not required for test modules
+    "D103", # Public test functions may omit docstrings by project convention
+    "D200",
+    "D202",
     "D210", # No whitespace allowed surrounding docstring text
     "D212", # Multi-line docstring summary should start at the first line
+    "PLR0133",
+    "PLR2004",
     "S101", # Use of assert detected. 
     "S110", # try-except-pass detected. 
     "S112", # try-except-continue detected. 

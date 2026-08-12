@@ -11,8 +11,8 @@ Suíte de testes para a Interface de Linha de Comando (CLI).
 Valida RF002, RF004 e RF005.
 """
 
-from pathlib import Path
 from unittest.mock import patch
+
 from typer.testing import CliRunner
 import pytest
 
@@ -73,13 +73,14 @@ def test_rf002_interface_sucesso_arquivo_unico(mock_converter, mock_arquivo):
 def test_rf004_interface_conversao_em_lote(mock_converter, mock_pasta):
     """Verifica se o CLI processa diretórios inteiros (RF004)."""
     mock_converter.return_value = "resultado.jpg"
-    
+    expected_calls = 2
+
     result = runner.invoke(app, [
         "convert",
         "--input", str(mock_pasta),
         "--format", "jpg"
     ])
-    
+
     assert result.exit_code == 0
     assert "2 arquivo(s) convertido(s)" in result.output
-    assert mock_converter.call_count == 2
+    assert mock_converter.call_count == expected_calls

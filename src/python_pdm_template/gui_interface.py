@@ -23,6 +23,7 @@ app = typer.Typer(
 
 
 _VALID_PAGES = {"tela1"}
+_MAX_PROGRESS = 100
 
 
 def execute_gui_command(
@@ -33,13 +34,12 @@ def execute_gui_command(
     sobrescrever: bool = False,
 ) -> bool:
     """Executa validações de fluxo para simular GUI (sem PySide6)."""
-
     # RF003: navegação estilo SPA
     if page not in _VALID_PAGES:
         raise typer.BadParameter("page inválida. Use uma página suportada.")
 
     # RF005: progresso/métricas
-    if not (0 <= progress <= 100):
+    if not (0 <= progress <= _MAX_PROGRESS):
         raise typer.BadParameter("progress inválido. Deve estar entre 0 e 100.")
 
     # Mantém comportamento simples e determinístico para os testes.
@@ -48,9 +48,8 @@ def execute_gui_command(
 
 
 @app.callback()
-def main():
+def main() -> None:
     """Interface GUI testável."""
-    pass
 
 
 @app.command("convert-command")
@@ -61,8 +60,7 @@ def convert_command(
     progress: int = typer.Option(0, "--progress", help="Progresso (0-100) para simulação."),
     force: bool = typer.Option(False, "--force", "-f", help="Forçar sobrescrita."),
 ):
-    """Command testável que simula a lógica de GUI."""
-
+    """Comando testável que simula a lógica de GUI."""
     execute_gui_command(
         caminho_origem=origem,
         formato_destino=destino,

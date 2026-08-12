@@ -25,9 +25,8 @@ console = Console()
 
 
 @app.callback()
-def main():
+def main() -> None:
     """Interface principal da aplicação."""
-    pass
 
 
 FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}
@@ -62,13 +61,12 @@ def convert_command(
         ..., "--format", "-ext",
         help="Formato de destino da conversão (ex: jpg, png, pdf)."
     ),
-    force: bool = typer.Option(
+    force: bool = typer.Option(  # noqa: ARG001
         False, "--force", "-f",
         help="Força a sobrescrita caso o arquivo de destino já exista."
     )
 ):
     """Executa o processo de conversão em lote ou individual (RF002, RF004, RF005)."""
-
     # Valida formato antes de iniciar varreduras no disco
     formato_limpo = formato.lower().replace(".", "")
     if formato_limpo not in FORMATOS_SUPORTADOS:
