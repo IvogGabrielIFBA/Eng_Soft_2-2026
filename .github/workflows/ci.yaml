@@ -5,9 +5,9 @@ name: Integracao Continua
 #     Veja https://docs.github.com/pt/actions/using-workflows/events-that-trigger-workflows para mais opções de eventos
 on:
   push:
-    branches: [feature]
+    branches: [master, feature]
   pull_request:
-    branches: [feature, Development]
+    branches: [master, feature, Development]
   workflow_dispatch:
 
 
@@ -22,9 +22,10 @@ jobs:
       matrix:
         # Testa em múltiplos sistemas operacionais
         os: [windows-latest]
-        # Testa com a versão mais recente do Python 3
+        # O pdm.lock foi gerado para Python 3.13; não usar "3.x",
+        # pois ele pode selecionar uma versão ainda não suportada.
         python-version:
-          - "3.x"
+          - "3.13"
 
     steps:
       # Faz o checkout do código-fonte do repositório

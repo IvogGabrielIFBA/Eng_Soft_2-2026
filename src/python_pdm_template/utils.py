@@ -42,4 +42,3 @@ def obter_mensagem() -> str:
     :return: Uma mensagem fixa.
     """
     return "Mensagem fixa"
-

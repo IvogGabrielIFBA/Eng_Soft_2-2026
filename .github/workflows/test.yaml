@@ -12,12 +12,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      # Executa todas as plataformas mesmo se uma delas falhar.
+      fail-fast: false
       matrix:
-        # Testa em múltiplos sistemas operacionais
+        # Valida compatibilidade nas plataformas suportadas pelo projeto.
         os: [ubuntu-latest, macos-latest, windows-latest]
-        # Testa com a versão mais recente do Python 3
+        # O pdm.lock foi gerado para Python 3.13; não usar "3.x",
+        # pois ele pode selecionar uma versão ainda não suportada.
         python-version:
-          - "3.x"
+          - "3.13"
 
     steps:
       # Faz o checkout do código-fonte do repositório
