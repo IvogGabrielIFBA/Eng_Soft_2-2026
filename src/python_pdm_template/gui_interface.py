@@ -16,7 +16,10 @@ from __future__ import annotations
 
 import typer
 
-app = typer.Typer(help="Interface (GUI testável) para conversão de imagens/documentos.")
+app = typer.Typer(
+    help="Interface (GUI testável) para conversão de imagens/documentos.",
+    no_args_is_help=True,
+)
 
 
 _VALID_PAGES = {"tela1"}
@@ -44,7 +47,13 @@ def execute_gui_command(
     return True
 
 
-@app.command()
+@app.callback()
+def main():
+    """Interface GUI testável."""
+    pass
+
+
+@app.command("convert-command")
 def convert_command(
     origem: str = typer.Option(..., "--input", "-i", help="Caminho do arquivo de origem."),
     destino: str = typer.Option(..., "--target", "-t", help="Extensão de destino."),
@@ -68,4 +77,3 @@ def convert_command(
 
 if __name__ == "__main__":
     app()
-

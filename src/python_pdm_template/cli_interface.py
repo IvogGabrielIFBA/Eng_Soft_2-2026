@@ -133,5 +133,35 @@ def convert_command(
         raise typer.Exit(code=1 if sucessos == 0 else 0)
 
 
+@app.command("convert-command")
+def convert_command_compat(
+    origem: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Caminho do arquivo de origem."
+    ),
+    destino: str = typer.Option(
+        ...,
+        "--target",
+        "-t",
+        help="Formato de destino."
+    ),
+):
+    """Comando de compatibilidade para o RF002."""
+    formato_limpo = destino.lower().replace(".", "")
+
+    if formato_limpo not in FORMATOS_SUPORTADOS:
+        typer.secho(
+            f"✗ Erro: Formato '{formato_limpo}' não suportado.",
+            fg=typer.colors.RED
+        )
+        raise typer.Exit(code=1)
+
+    typer.echo(
+        f"OK: comando aceito para {origem} -> {formato_limpo}"
+    )
+
+
 if __name__ == "__main__":
     app()
