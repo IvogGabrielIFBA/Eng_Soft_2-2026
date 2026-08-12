@@ -80,7 +80,6 @@ def test_rf005_falha_se_progress_fora_do_intervalo():
     assert result.exit_code != 0
 
 
-
 def teste_interface_spa(monkeypatch):  # pyright: ignore[reportMissingParameterType, reportUnknownParameterType]
     def valor_alterado(prompt: str):  # noqa: ARG001
         return "Valor modificado"

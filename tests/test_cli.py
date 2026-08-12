@@ -6,98 +6,80 @@ dos comandos do terminal com o motor de conversão, garantindo o
 cumprimento do requisito funcional RF002.
 """
 
-import sys
+"""
+Suíte de testes para a Interface de Linha de Comando (CLI).
+Valida RF002, RF004 e RF005.
+"""
+
 from pathlib import Path
 from unittest.mock import patch
-
 from typer.testing import CliRunner
+import pytest
 
 from python_pdm_template.cli_interface import app
 
-# Ajuste do path para execução isolada do pytest
-_src_path = str(Path(__file__).parent.parent / "src")
-if _src_path not in sys.path:
-    sys.path.insert(0, _src_path)
-
-
 runner = CliRunner()
 
+# Fixtures para criar cenários de teste reais no disco
+@pytest.fixture
+def mock_arquivo(tmp_path):
+    """Cria um arquivo de imagem fictício para testes."""
+    arquivo = tmp_path / "teste.png"
+    arquivo.write_text("conteudo falso")
+    return arquivo
 
-def test_rf002_interface_aceita_novas_flags_separadas():
-    """Valida o comportamento da CLI sob parâmetros nominais corretos."""
-    with patch("os.path.exists", return_value=True):
-        result = runner.invoke(app, [
-            "--input", "teste.png",
-            "--output-dir", "resultado_pasta",
-            "--format", "jpg"
-        ])
+@pytest.fixture
+def mock_pasta(tmp_path):
+    """Cria uma pasta com múltiplos arquivos para teste de lote."""
+    pasta = tmp_path / "lote"
+    pasta.mkdir()
+    (pasta / "1.png").write_text("falso 1")
+    (pasta / "2.png").write_text("falso 2")
+    return pasta
 
-    print("\n--- SAÍDA DO TERMINAL ---")
-    print(result.output)
-    print("-------------------------\n")
+def test_rf002_interface_falha_sem_parametros_obrigatorios():
+    """Garante que a CLI rejeite execução sem os parâmetros mínimos."""
+    result = runner.invoke(app, ["convert", "--input", "teste.png"])
+    assert result.exit_code != 0
+    assert "Missing option" in result.output
 
-    assert result.exit_code == 0
-    assert "Processando" in result.output
-
-
-def test_rf002_falha_se_faltar_parametro_obrigatorio():
-    """Verifica se a CLI bloqueia a execução na ausência de opções obrigatórias."""
+def test_rf002_interface_rejeita_formato_invalido(mock_arquivo):
+    """Garante que formatos fora de FORMATOS_SUPORTADOS sejam barrados."""
     result = runner.invoke(app, [
-        "--input", "teste.png"
+        "convert", 
+        "--input", str(mock_arquivo), 
+        "--format", "mp3"
     ])
     assert result.exit_code != 0
+    assert "não suportado" in result.output.lower()
 
+@patch("python_pdm_template.cli_interface.converter_arquivo")
+def test_rf002_interface_sucesso_arquivo_unico(mock_converter, mock_arquivo):
+    """Valida o fluxo nominal com um único arquivo, mockando o Core."""
+    mock_converter.return_value = "resultado.jpg"
+    
+    result = runner.invoke(app, [
+        "convert",
+        "--input", str(mock_arquivo),
+        "--format", "jpg"
+    ])
+    
+    assert result.exit_code == 0
+    assert "1 arquivo(s) convertido(s) com sucesso" in result.output
+    # Garante que o Core foi chamado corretamente
+    mock_converter.assert_called_once_with(str(mock_arquivo), "jpg")
 
-def test_rf002_falha_quando_arquivo_origem_nao_existe():
-    """Verifica se a CLI encerra com erro quando o arquivo de entrada não é localizado."""
-    with patch("os.path.exists", return_value=False):
-        result = runner.invoke(app, [
-            "--input", "arquivo_fantasma.png",
-            "--output-dir", "resultado_pasta",
-            "--format", "jpg"
-        ])
-
-    assert result.exit_code != 0
-    assert "Erro: O arquivo de origem não foi encontrado" in result.output
-
-
-def test_rf002_falha_quando_formato_destino_nao_suportado():
-    """Garante a rejeição de formatos de destino fora do escopo homologado."""
-    with patch("os.path.exists", return_value=True):
-        result = runner.invoke(app, [
-            "--input", "teste.png",
-            "--output-dir", "resultado_pasta",
-            "--format", "mp3"
-        ])
-
-    assert result.exit_code != 0
-    assert "Erro: Formato de destino 'mp3' não é suportado" in result.output
-
-
-def test_rf002_falha_quando_arquivo_origem_tem_extensao_invalida():
-    """Garante a rejeição de extensões de entrada não suportadas pelo sistema."""
-    with patch("os.path.exists", return_value=True):
-        result = runner.invoke(app, [
-            "--input", "documento.txt",
-            "--output-dir", "resultado_pasta",
-            "--format", "jpg"
-        ])
-
-    assert result.exit_code != 0
-    assert "Erro: Extensão do arquivo de origem '.txt' não é suportada" in result.output
-
-
-def test_rf002_falha_quando_diretorio_destino_nao_existe():
-    """Verifica se o sistema impede a operação caso o diretório alvo seja inválido."""
-    def os_exists_mock(path: str) -> bool:
-        return path != "pasta_fantasma"
-
-    with patch("os.path.exists", side_effect=os_exists_mock):
-        result = runner.invoke(app, [
-            "--input", "teste.png",
-            "--output-dir", "pasta_fantasma",
-            "--format", "jpg"
-        ])
-
-    assert result.exit_code != 0
-    assert "Erro: O diretório de destino não foi encontrado" in result.output
+@patch("python_pdm_template.cli_interface.converter_arquivo")
+def test_rf004_interface_conversao_em_lote(mock_converter, mock_pasta):
+    """Verifica se o CLI processa diretórios inteiros (RF004)."""
+    mock_converter.return_value = "resultado.jpg"
+    
+    result = runner.invoke(app, [
+        "convert",
+        "--input", str(mock_pasta),
+        "--format", "jpg"
+    ])
+    
+    assert result.exit_code == 0
+    assert "2 arquivo(s) convertido(s)" in result.output
+    assert mock_converter.call_count == 2
