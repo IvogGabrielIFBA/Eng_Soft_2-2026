@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
@@ -47,7 +47,7 @@ MENU_CONTENT = {
     },
     "Formatos": {
         "title": "Formatos suportados",
-        "body": "jpg\npng\npdf\nbmp",
+        "body": "JPG\nPNG\nPDF\nBMP",
     },
     "Precos": {
         "title": "Precos",
