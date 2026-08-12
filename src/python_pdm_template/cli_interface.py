@@ -32,9 +32,21 @@ app = typer.Typer(help="CLI para conversão de arquivos de imagem e documentos."
 console = Console()
 
 
-@app.callback()
-def main() -> None:
-    """Interface principal da aplicação."""
+@app.callback(invoke_without_command=True)
+def main(
+    contexto: typer.Context,
+    origem: str | None = typer.Option(None, "--input", "-i", help="Caminho do arquivo de origem."),
+    formato: str | None = typer.Option(None, "--format", "-ext", help="Formato de destino."),
+) -> None:
+    """Aceita a forma legada da CLI sem o subcomando ``convert``.
+
+    Raises:
+        typer.BadParameter: Se a chamada direta não informar entrada e formato.
+    """
+    if contexto.invoked_subcommand is not None:
+        return
+    if origem is None or formato is None:
+        raise typer.BadParameter("Use --input e --format, ou o subcomando convert.")
 
 
 FORMATOS_SUPORTADOS = {"jpg", "png", "pdf", "bmp"}

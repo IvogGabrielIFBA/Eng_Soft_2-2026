@@ -57,9 +57,24 @@ def execute_gui_command(
     return True
 
 
-@app.callback()
-def main() -> None:
-    """Interface GUI testável."""
+@app.callback(invoke_without_command=True)
+def main(
+    contexto: typer.Context,
+    origem: str | None = typer.Option(None, "--input", "-i", help="Caminho do arquivo de origem."),
+    destino: str | None = typer.Option(None, "--target", "-t", help="Extensão de destino."),
+    page: str = typer.Option("tela1", "--page", help="Página atual (SPA) para simulação."),
+    progress: int = typer.Option(0, "--progress", help="Progresso (0-100) para simulação."),
+) -> None:
+    """Aceita a forma legada da interface GUI sem subcomando.
+
+    Raises:
+        typer.BadParameter: Se a chamada direta não informar entrada e destino.
+    """
+    if contexto.invoked_subcommand is not None:
+        return
+    if origem is None or destino is None:
+        raise typer.BadParameter("Use --input e --target, ou o subcomando convert-command.")
+    execute_gui_command(origem, destino, page, progress)
 
 
 @app.command("convert-command")
