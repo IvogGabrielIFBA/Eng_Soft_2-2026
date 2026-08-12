@@ -58,13 +58,13 @@ jobs:
         shell: bash
 
       - name: Rodar Ruff (Linter)
-        run: python -m pdm run ruff check src tests
+        run: pdm run ruff check src tests
 
       - name: Rodar Pyright (Type Checking)
-        run: python -m pdm run pyright
+        run: pdm run pyright
 
       - name: Rodar pytest com coverage
-        run: python -m pdm run pytest tests --cov=src --cov-report=xml --cov-report=term
+        run: pdm run pytest tests --cov=src --cov-report=xml --cov-report=term
 
       - name: Upload coverage to artifacts
         uses: actions/upload-artifact@v4
